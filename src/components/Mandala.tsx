@@ -61,7 +61,7 @@ export default function Mandala({ archetypes, onTalk, symbols = [], projections 
                 className={cn(
                   "shrink-0 w-10 h-14 rounded-md overflow-hidden border transition-all duration-300 relative group cursor-pointer",
                   activeId === a.id 
-                    ? "border-alchemy-gold scale-110 z-10 shadow-[0_0_15px_rgba(212,175,55,0.4)]" 
+                    ? "border-alchemy-gold scale-110 z-10 shadow-[0_0_15px_rgba(232,213,163,0.4)]" 
                     : "border-white/10 opacity-40 hover:opacity-100",
                   isLocked && "grayscale brightness-50"
                 )}

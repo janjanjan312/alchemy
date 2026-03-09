@@ -41,7 +41,7 @@ export default function ArchetypeCard({ archetype, onTalk, isActive = true, onMa
             isLocked
               ? "border-white/5 bg-white/5 grayscale"
               : archetype.recentlyUpdated
-                ? "border-alchemy-accent/30 bg-alchemy-black shadow-[0_0_16px_rgba(226,199,146,0.1)]"
+                ? "border-alchemy-accent/30 bg-alchemy-black shadow-[0_0_16px_rgba(232,213,163,0.1)]"
                 : "border-alchemy-gold/20 bg-alchemy-black"
           )}
           style={{ backfaceVisibility: 'hidden', pointerEvents: isFlipped ? 'none' : 'auto' }}
@@ -80,7 +80,7 @@ export default function ArchetypeCard({ archetype, onTalk, isActive = true, onMa
           )}
 
           {!isLocked && archetype.recentlyUpdated && (
-            <div className="absolute top-4 right-4 z-30 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-alchemy-accent/90 shadow-[0_0_12px_rgba(226,199,146,0.4)]">
+            <div className="absolute top-4 right-4 z-30 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-alchemy-accent/90 shadow-[0_0_12px_rgba(232,213,163,0.4)]">
               <Sparkles size={11} className="text-alchemy-black" />
               <span className="text-[11px] font-bold text-alchemy-black tracking-wide">新洞察</span>
             </div>

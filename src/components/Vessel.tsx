@@ -614,7 +614,7 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
             className={cn(
               "flex items-center gap-2 px-4 py-2.5 rounded-full transition-all duration-500 text-[13px] whitespace-nowrap",
               !isArchetypeActive && mode === m.id
-                ? "bg-alchemy-accent text-alchemy-black shadow-[0_0_15px_rgba(226,199,146,0.3)]"
+                ? "bg-alchemy-accent text-alchemy-black shadow-[0_0_15px_rgba(232,213,163,0.3)]"
                 : "bg-white/5 text-alchemy-paper/60 hover:bg-white/10"
             )}
           >
@@ -632,7 +632,7 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
               className={cn(
                 "flex items-center gap-2 px-4 py-2.5 rounded-full transition-all duration-500 text-[13px] whitespace-nowrap",
                 isActive
-                  ? "bg-alchemy-accent text-alchemy-black shadow-[0_0_15px_rgba(226,199,146,0.3)]"
+                  ? "bg-alchemy-accent text-alchemy-black shadow-[0_0_15px_rgba(232,213,163,0.3)]"
                   : "bg-white/5 text-alchemy-paper/60 hover:bg-white/10"
               )}
             >
@@ -697,7 +697,7 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
                       "w-full py-2.5 rounded-xl text-sm font-sans font-semibold transition-all",
                       savedInsights.has(`${msg.insight.type}|${msg.insight.content}`)
                         ? "bg-alchemy-accent/10 text-alchemy-accent/60 border border-alchemy-accent/20 cursor-default"
-                        : "bg-[rgba(226,199,146,0.06)] text-alchemy-accent border border-alchemy-accent/20 backdrop-blur-lg hover:bg-[rgba(226,199,146,0.1)]"
+                        : "bg-[rgba(232,213,163,0.06)] text-alchemy-accent border border-alchemy-accent/20 backdrop-blur-lg hover:bg-[rgba(232,213,163,0.1)]"
                     )}
                   >
                     {savedInsights.has(`${msg.insight.type}|${msg.insight.content}`) ? '已归档 ✓' : '确认归档'}
@@ -732,7 +732,7 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
                 <motion.div
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  className="mt-4 p-4 rounded-xl border border-alchemy-accent/15 bg-[rgba(226,199,146,0.02)] backdrop-blur-sm max-w-[280px] lg:max-w-xs"
+                  className="mt-4 p-4 rounded-xl border border-alchemy-accent/15 bg-[rgba(232,213,163,0.02)] backdrop-blur-sm max-w-[280px] lg:max-w-xs"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <ScanEye size={16} className="text-alchemy-accent/70" />
@@ -755,8 +755,8 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
                     className={cn(
                       "w-full py-2.5 rounded-xl text-sm font-sans font-semibold transition-all",
                       savedProjections.has(`${msg.projection.target}|${msg.projection.trait}|${msg.projection.archetype}`)
-                        ? "bg-[rgba(226,199,146,0.02)] text-alchemy-accent/30 border border-alchemy-accent/6"
-                        : "bg-[rgba(226,199,146,0.06)] text-alchemy-accent border border-alchemy-accent/20 backdrop-blur-lg hover:bg-[rgba(226,199,146,0.1)]"
+                        ? "bg-[rgba(232,213,163,0.02)] text-alchemy-accent/30 border border-alchemy-accent/6"
+                        : "bg-[rgba(232,213,163,0.06)] text-alchemy-accent border border-alchemy-accent/20 backdrop-blur-lg hover:bg-[rgba(232,213,163,0.1)]"
                     )}
                   >
                     {savedProjections.has(`${msg.projection.target}|${msg.projection.trait}|${msg.projection.archetype}`)
@@ -844,7 +844,7 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
             <button
               onClick={() => handleSend()}
               disabled={!input.trim()}
-              className="p-3.5 rounded-full bg-alchemy-accent text-alchemy-black hover:scale-110 transition-transform disabled:opacity-50 disabled:scale-100 shadow-[0_0_15px_rgba(226,199,146,0.3)]"
+              className="p-3.5 rounded-full bg-alchemy-accent text-alchemy-black hover:scale-110 transition-transform disabled:opacity-50 disabled:scale-100 shadow-[0_0_15px_rgba(232,213,163,0.3)]"
             >
               <Send size={20} />
             </button>
