@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Highlight Style Preview — Apple-inspired</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #050505; font-family: 'Inter', -apple-system, sans-serif;
+      color: #f1f5f9; padding: 48px 20px;
+    }
+    h1 { font-size: 20px; color: #e2c792; text-align: center; font-weight: 600; letter-spacing: 0.04em; }
+    .subtitle { font-size: 12px; color: #555; text-align: center; margin: 8px 0 56px; }
+    h2 {
+      font-size: 11px; color: #666; text-align: center;
+      letter-spacing: 0.2em; text-transform: uppercase; margin: 56px 0 28px;
+    }
+
+    .schemes { display: flex; flex-wrap: wrap; gap: 28px; justify-content: center; }
+    .scheme {
+      width: 340px; border-radius: 20px; overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+    .scheme:hover { transform: translateY(-6px); }
+    .scheme-header {
+      padding: 20px 24px 14px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .scheme-name { font-size: 15px; font-weight: 600; }
+    .scheme-desc { font-size: 10px; color: #666; padding: 0 24px 16px; line-height: 1.5; }
+    .scheme-body { padding: 0 24px 24px; }
+
+    /* Mini card */
+    .mini-card {
+      width: 100%; height: 160px; border-radius: 14px; position: relative; overflow: hidden;
+      margin-bottom: 16px; transition: all 0.3s;
+    }
+    .mini-card-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; }
+    .mini-card-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, #050505 0%, transparent 70%);
+    }
+    .mini-card-name {
+      position: absolute; bottom: 14px; left: 16px;
+      font-size: 15px; font-weight: 700; color: #e2c792;
+    }
+    .corner { position: absolute; width: 10px; height: 10px; }
+    .corner-tl { top: 10px; left: 10px; border-top: 1px solid; border-left: 1px solid; }
+    .corner-tr { top: 10px; right: 10px; border-top: 1px solid; border-right: 1px solid; }
+    .corner-bl { bottom: 10px; left: 10px; border-bottom: 1px solid; border-left: 1px solid; }
+    .corner-br { bottom: 10px; right: 10px; border-bottom: 1px solid; border-right: 1px solid; }
+
+    /* Badge */
+    .card-badge {
+      position: absolute; top: 10px; right: 10px; z-index: 10;
+      display: flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 99px; font-size: 9px; font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    .card-badge svg { width: 9px; height: 9px; }
+
+    /* Buttons */
+    .btn-row { display: flex; gap: 10px; margin-top: 16px; }
+    .btn {
+      flex: 1; padding: 10px; border-radius: 12px; text-align: center;
+      font-size: 12px; font-weight: 600; border: none; cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    /* Projection card */
+    .proj-card { margin-top: 14px; padding: 14px; border-radius: 12px; }
+    .proj-header { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+    .proj-header svg { width: 14px; height: 14px; }
+    .proj-header span { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    .proj-row { font-size: 12px; color: rgba(255,255,255,0.7); margin-bottom: 3px; }
+    .proj-row .label { color: rgba(255,255,255,0.3); }
+
+    /* Dot */
+    .dot {
+      width: 6px; height: 6px; border-radius: 50%; display: inline-block;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Glow breathe */
+    @keyframes glow-breathe {
+      0%, 100% { box-shadow: 0 0 12px rgba(226,199,146,0.15); }
+      50% { box-shadow: 0 0 20px rgba(226,199,146,0.3); }
+    }
+
+    /* Sparkle icon path */
+    .sparkle-path { d: path("M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"); }
+
+    .pick-label { text-align: center; font-size: 11px; color: #444; margin-top: 48px; }
+  </style>
+</head>
+<body>
+  <h1>高亮样式预览</h1>
+  <p class="subtitle">Apple 风格 — 只用已有的黑/白/砂金色系，不引入新色相</p>
+
+  <h2>方案对比</h2>
+  <div class="schemes">
+
+    <!-- A: Gold glow border only -->
+    <div class="scheme" style="background: #0a0a0a; border: 1px solid rgba(255,255,255,0.04);">
+      <div class="scheme-header">
+        <span class="scheme-name" style="color: #e2c792;">A. 金缘微光</span>
+      </div>
+      <div class="scheme-desc">不加徽章，只让卡片边框用已有的砂金色微微发光 + 呼吸动画。最克制的方案。</div>
+      <div class="scheme-body">
+        <div class="mini-card" style="border: 1px solid rgba(226,199,146,0.35); animation: glow-breathe 3s ease-in-out infinite;">
+          <img class="mini-card-img" src="https://images.unsplash.com/photo-1746469291605-e9195726bd46?w=400&q=60" />
+          <div class="mini-card-overlay"></div>
+          <div class="corner corner-tl" style="border-color: rgba(226,199,146,0.5);"></div>
+          <div class="corner corner-tr" style="border-color: rgba(226,199,146,0.5);"></div>
+          <div class="corner corner-bl" style="border-color: rgba(226,199,146,0.5);"></div>
+          <div class="corner corner-br" style="border-color: rgba(226,199,146,0.5);"></div>
+          <span class="mini-card-name">The Father</span>
+        </div>
+        <div class="proj-card" style="border: 1px solid rgba(226,199,146,0.15); background: rgba(226,199,146,0.03);">
+          <div class="proj-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#e2c792" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M2 12h4m12 0h4M12 2v4m0 12v4"/></svg>
+            <span style="color: #e2c792;">投射识别</span>
+          </div>
+          <div class="proj-row"><span class="label">对象 </span>老板</div>
+          <div class="proj-row"><span class="label">特质 </span>严苛评判</div>
+          <div class="proj-row"><span class="label">原型 </span>father</div>
+        </div>
+        <div class="btn-row">
+          <div class="btn" style="background: rgba(226,199,146,0.12); color: #e2c792; border: 1px solid rgba(226,199,146,0.25);">确认归档</div>
+          <div class="btn" style="background: rgba(226,199,146,0.06); color: rgba(226,199,146,0.35);">已归档 ✓</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B: Frosted glass badge -->
+    <div class="scheme" style="background: #0a0a0a; border: 1px solid rgba(255,255,255,0.04);">
+      <div class="scheme-header">
+        <span class="scheme-name" style="color: rgba(255,255,255,0.9);">B. 磨砂玻璃</span>
+      </div>
+      <div class="scheme-desc">Apple 经典毛玻璃风格。徽章用半透明白+模糊底，按钮也是磨砂质感，不引入任何色相。</div>
+      <div class="scheme-body">
+        <div class="mini-card" style="border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 0 20px rgba(255,255,255,0.04);">
+          <img class="mini-card-img" src="https://images.unsplash.com/photo-1746469291605-e9195726bd46?w=400&q=60" />
+          <div class="mini-card-overlay"></div>
+          <div class="corner corner-tl" style="border-color: rgba(255,255,255,0.2);"></div>
+          <div class="corner corner-tr" style="border-color: rgba(255,255,255,0.2);"></div>
+          <div class="corner corner-bl" style="border-color: rgba(255,255,255,0.2);"></div>
+          <div class="corner corner-br" style="border-color: rgba(255,255,255,0.2);"></div>
+          <div class="card-badge" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.12);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
+            新洞察
+          </div>
+          <span class="mini-card-name">The Father</span>
+        </div>
+        <div class="proj-card" style="border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); backdrop-filter: blur(8px);">
+          <div class="proj-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M2 12h4m12 0h4M12 2v4m0 12v4"/></svg>
+            <span style="color: rgba(255,255,255,0.5);">投射识别</span>
+          </div>
+          <div class="proj-row"><span class="label">对象 </span>老板</div>
+          <div class="proj-row"><span class="label">特质 </span>严苛评判</div>
+          <div class="proj-row"><span class="label">原型 </span>father</div>
+        </div>
+        <div class="btn-row">
+          <div class="btn" style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(8px);">确认归档</div>
+          <div class="btn" style="background: rgba(255,255,255,0.03); color: rgba(255,255,255,0.25);">已归档 ✓</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C: Warm surface elevation -->
+    <div class="scheme" style="background: #0a0a0a; border: 1px solid rgba(255,255,255,0.04);">
+      <div class="scheme-header">
+        <span class="scheme-name" style="color: #e2c792;">C. 暖光浮层</span>
+      </div>
+      <div class="scheme-desc">Apple 表面层级法 — 用更亮的底色(#1a1714)暗示"有内容"，配合砂金色点缀。不需要徽章，卡片本身在"发光"。</div>
+      <div class="scheme-body">
+        <div class="mini-card" style="border: 1px solid rgba(226,199,146,0.2); background: #1a1714; box-shadow: 0 4px 24px rgba(226,199,146,0.08);">
+          <img class="mini-card-img" src="https://images.unsplash.com/photo-1746469291605-e9195726bd46?w=400&q=60" />
+          <div class="mini-card-overlay" style="background: linear-gradient(to top, #1a1714 0%, transparent 70%);"></div>
+          <div class="corner corner-tl" style="border-color: rgba(226,199,146,0.35);"></div>
+          <div class="corner corner-tr" style="border-color: rgba(226,199,146,0.35);"></div>
+          <div class="corner corner-bl" style="border-color: rgba(226,199,146,0.35);"></div>
+          <div class="corner corner-br" style="border-color: rgba(226,199,146,0.35);"></div>
+          <div style="position: absolute; top: 10px; right: 12px; z-index: 10;">
+            <div class="dot" style="background: #e2c792; box-shadow: 0 0 8px rgba(226,199,146,0.6);"></div>
+          </div>
+          <span class="mini-card-name">The Father</span>
+        </div>
+        <div class="proj-card" style="border: 1px solid rgba(226,199,146,0.12); background: #13110f;">
+          <div class="proj-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#e2c792" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M2 12h4m12 0h4M12 2v4m0 12v4"/></svg>
+            <span style="color: #e2c792;">投射识别</span>
+          </div>
+          <div class="proj-row"><span class="label">对象 </span>老板</div>
+          <div class="proj-row"><span class="label">特质 </span>严苛评判</div>
+          <div class="proj-row"><span class="label">原型 </span>father</div>
+        </div>
+        <div class="btn-row">
+          <div class="btn" style="background: #1a1714; color: #e2c792; border: 1px solid rgba(226,199,146,0.2);">确认归档</div>
+          <div class="btn" style="background: #0f0e0c; color: rgba(226,199,146,0.3);">已归档 ✓</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D: Gold + Glass hybrid -->
+    <div class="scheme" style="background: #0a0a0a; border: 1px solid rgba(255,255,255,0.04);">
+      <div class="scheme-header">
+        <span class="scheme-name" style="color: #e2c792;">D. 金丝磨砂</span>
+      </div>
+      <div class="scheme-desc">金色细线边框 + 毛玻璃底的混合风格。砂金做线条勾勒，填充用极淡的磨砂白。精致且高级。</div>
+      <div class="scheme-body">
+        <div class="mini-card" style="border: 1px solid rgba(226,199,146,0.3); box-shadow: 0 0 16px rgba(226,199,146,0.1);">
+          <img class="mini-card-img" src="https://images.unsplash.com/photo-1746469291605-e9195726bd46?w=400&q=60" />
+          <div class="mini-card-overlay"></div>
+          <div class="corner corner-tl" style="border-color: rgba(226,199,146,0.45);"></div>
+          <div class="corner corner-tr" style="border-color: rgba(226,199,146,0.45);"></div>
+          <div class="corner corner-bl" style="border-color: rgba(226,199,146,0.45);"></div>
+          <div class="corner corner-br" style="border-color: rgba(226,199,146,0.45);"></div>
+          <div class="card-badge" style="background: rgba(226,199,146,0.08); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: #e2c792; border: 1px solid rgba(226,199,146,0.25);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
+            新洞察
+          </div>
+          <span class="mini-card-name">The Father</span>
+        </div>
+        <div class="proj-card" style="border: 1px solid rgba(226,199,146,0.15); background: rgba(226,199,146,0.02); backdrop-filter: blur(4px);">
+          <div class="proj-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(226,199,146,0.7)" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M2 12h4m12 0h4M12 2v4m0 12v4"/></svg>
+            <span style="color: rgba(226,199,146,0.7);">投射识别</span>
+          </div>
+          <div class="proj-row"><span class="label">对象 </span>老板</div>
+          <div class="proj-row"><span class="label">特质 </span>严苛评判</div>
+          <div class="proj-row"><span class="label">原型 </span>father</div>
+        </div>
+        <div class="btn-row">
+          <div class="btn" style="background: rgba(226,199,146,0.06); color: #e2c792; border: 1px solid rgba(226,199,146,0.2); backdrop-filter: blur(8px);">确认归档</div>
+          <div class="btn" style="background: rgba(226,199,146,0.02); color: rgba(226,199,146,0.3); border: 1px solid rgba(226,199,146,0.06);">已归档 ✓</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="pick-label">打开 http://localhost:3000/color-preview.html 预览 · 选好后告诉我字母编号</p>
+</body>
+</html>

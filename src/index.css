@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:wght@100..900&display=swap');
+@import "tailwindcss";
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@theme {
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Inter", sans-serif;
+  
+  --color-alchemy-black: #050505;
+  --color-alchemy-gold: #f8fafc; /* Starlight White */
+  --color-alchemy-blue: #0a0a0a; /* Neutral Dark */
+  --color-alchemy-accent: #e2c792; /* Pale Sand Gold - Matching the image texture */
+  --color-alchemy-red: #ef4444;
+  --color-alchemy-paper: #f1f5f9;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
+  }
+
+  body {
+    @apply text-alchemy-paper font-sans selection:bg-alchemy-accent/30;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    overscroll-behavior: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #050505;
+    padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) 0 env(safe-area-inset-left, 0);
+  }
+
+  #root {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  input, textarea {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+
+  /* Desktop: phone frame preview */
+  @media (min-width: 481px) {
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f5f5f5;
+      padding: 24px;
+    }
+
+    #root {
+      width: auto;
+      height: 100%;
+      max-height: 932px;
+      max-width: 430px;
+      aspect-ratio: 9 / 18;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      box-shadow:
+        0 0 0 2px #222,
+        0 0 0 8px #1a1a1a,
+        0 0 0 10px #333,
+        0 25px 80px rgba(0, 0, 0, 0.35);
+    }
+
+  }
+}
+
+.stars-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(ellipse at bottom, #111111 0%, #050505 100%);
+  overflow: hidden;
+}
+
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.5;
+  animation: 
+    twinkle var(--duration) infinite ease-in-out,
+    drift var(--drift-duration) infinite linear;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes drift {
+  from { transform: translateY(0) translateX(0); }
+  to { transform: translateY(-100vh) translateX(20px); }
+}
+
+.glass {
+  @apply bg-white/5 backdrop-blur-xl border border-white/10;
+}
+
+.gold-border {
+  @apply border border-alchemy-gold/20;
+}
+
+.gold-text {
+  @apply text-alchemy-gold;
+}
+
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-alchemy-accent/20 rounded-full hover:bg-alchemy-accent/40 transition-colors;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

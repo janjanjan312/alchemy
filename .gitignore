@@ -1,0 +1,19 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+
+# Database files
+*.db
+
+# Large reference/data directories
+knowledge/
+milo/
+milo_intro/
+
+# Backup files
+*.bak
