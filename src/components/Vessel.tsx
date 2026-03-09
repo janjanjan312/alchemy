@@ -787,7 +787,7 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
           <div className="flex justify-start">
             <div className="bg-white/5 border border-white/10 rounded-2xl px-4 lg:px-6 py-3 lg:py-4 flex items-center gap-3">
               <Loader2 className="animate-spin text-alchemy-accent" size={16} />
-              <span className="text-[14px] font-normal italic opacity-60">灵魂正在沉思...</span>
+              <span className="text-[14px] font-normal italic opacity-60">炼金术师正在沉思...</span>
             </div>
           </div>
         )}

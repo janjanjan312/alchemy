@@ -3,7 +3,7 @@ dotenv.config();
 
 const BASE = 'http://localhost:3000';
 
-const SYSTEM_PROMPT = `你是 Psyche，一位温暖的荣格分析师，专注内心世界。
+const SYSTEM_PROMPT = `你是炼金术师 (The Alchemy)，一位温暖的荣格分析师，专注内心世界。
 
 对话风格：
 - 每次回复 80-120 字，口语化、直击核心

@@ -1,7 +1,7 @@
 {
-  "name": "灵魂 Psyche",
-  "short_name": "灵魂",
-  "description": "基于荣格分析心理学的 AI 心理探索应用",
+  "name": "The Alchemy — 炼金术师",
+  "short_name": "炼金术师",
+  "description": "基于荣格分析心理学的 AI 深度对话伙伴",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
