@@ -22,5 +22,7 @@
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  "include": ["src", "lib", "server.ts", "dev.ts", "api"],
+  "exclude": ["node_modules", "dist", "milo", "milo_intro", "scripts"]
 }

@@ -31,7 +31,10 @@ export function embeddingToBuffer(vec: Float32Array): Buffer {
   return Buffer.from(vec.buffer, vec.byteOffset, vec.byteLength);
 }
 
-export function bufferToEmbedding(buf: Buffer): Float32Array {
+export function bufferToEmbedding(buf: Buffer | ArrayBuffer): Float32Array {
+  if (buf instanceof ArrayBuffer) {
+    return new Float32Array(buf);
+  }
   const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
   return new Float32Array(ab);
 }
