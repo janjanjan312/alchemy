@@ -4,11 +4,13 @@
   "framework": null,
   "functions": {
     "api/chat.ts": { "maxDuration": 60 },
-    "api/transcribe.ts": { "maxDuration": 60 }
+    "api/transcribe.ts": { "maxDuration": 60 },
+    "api/index.ts": { "maxDuration": 60 }
   },
   "rewrites": [
     { "source": "/api/chat", "destination": "/api/chat" },
     { "source": "/api/transcribe", "destination": "/api/transcribe" },
+    { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/((?!api).*)", "destination": "/index.html" }
   ]
 }
