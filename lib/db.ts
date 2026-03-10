@@ -1,43 +1,35 @@
-import type { Client, InValue } from '@libsql/client';
+import { createClient, type Client, type InValue } from '@libsql/client/web';
 
 let _client: Client | null = null;
 
-async function getClient(): Promise<Client> {
+function getClient(): Client {
   if (!_client) {
-    const url = process.env.TURSO_DATABASE_URL || 'file:psyche.db';
-    const authToken = process.env.TURSO_AUTH_TOKEN;
-
-    if (url.startsWith('file:')) {
-      const { createClient } = await import('@libsql/client');
-      _client = createClient({ url, authToken });
-    } else {
-      const { createClient } = await import('@libsql/client/web');
-      _client = createClient({ url, authToken });
-    }
+    const url = process.env.TURSO_DATABASE_URL;
+    if (!url) throw new Error('TURSO_DATABASE_URL is required');
+    _client = createClient({
+      url,
+      authToken: process.env.TURSO_AUTH_TOKEN,
+    });
   }
   return _client;
 }
 
 export async function dbExec(sql: string): Promise<void> {
-  const client = await getClient();
-  await client.executeMultiple(sql);
+  await getClient().executeMultiple(sql);
 }
 
 export async function dbAll(sql: string, ...args: InValue[]): Promise<any[]> {
-  const client = await getClient();
-  const result = await client.execute({ sql, args });
+  const result = await getClient().execute({ sql, args });
   return result.rows as any[];
 }
 
 export async function dbGet(sql: string, ...args: InValue[]): Promise<any | undefined> {
-  const client = await getClient();
-  const result = await client.execute({ sql, args });
+  const result = await getClient().execute({ sql, args });
   return (result.rows[0] as any) || undefined;
 }
 
 export async function dbRun(sql: string, ...args: InValue[]): Promise<{ lastInsertRowid: number; changes: number }> {
-  const client = await getClient();
-  const result = await client.execute({ sql, args });
+  const result = await getClient().execute({ sql, args });
   return {
     lastInsertRowid: Number(result.lastInsertRowid),
     changes: result.rowsAffected,
