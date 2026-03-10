@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { createPortal } from 'react-dom';
+import { createPortal, flushSync } from 'react-dom';
 import { Send, Sparkles, Moon, Eye, Loader2, Mic, Keyboard, BookOpen, ScanEye, Menu, SquarePen, X, Users } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ReactMarkdown from 'react-markdown';
@@ -426,11 +426,7 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
       }
       return updated;
     });
-    setInput('');
-    if (textareaRef.current) {
-      textareaRef.current.value = '';
-      textareaRef.current.blur();
-    }
+    flushSync(() => setInput(''));
     setIsThinking(true);
 
     pendingUserMsgs.current.push(userMsg);
