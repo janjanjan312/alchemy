@@ -13,6 +13,7 @@ import { INITIAL_ARCHETYPES } from '../constants';
 import { startRecording as startASRRecording, type PushToTalkController } from '../services/pushToTalk';
 import { detectCrisis } from '../services/guardrails';
 import CrisisModal from './CrisisModal';
+import { VoiceWaveform } from './VoiceWaveform';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -171,6 +172,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
   const [inputMethod, setInputMethod] = useState<'voice' | 'text'>('voice');
   const [isRecording, setIsRecording] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
+  const [audioLevel, setAudioLevel] = useState(0);
   const [userSymbols, setUserSymbols] = useState<SymbolEntry[]>([]);
   const [userProjections, setUserProjections] = useState<ProjectionEntry[]>([]);
   const [showSidebar, setShowSidebar] = useState(false);
@@ -505,9 +507,10 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
   const startRecording = useCallback(async (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
     setIsRecording(true);
+    setAudioLevel(0);
 
     try {
-      pushToTalkRef.current = await startASRRecording('zh');
+      pushToTalkRef.current = await startASRRecording('zh', (level) => setAudioLevel(level));
     } catch (err) {
       console.error('Recording failed:', err);
       setIsRecording(false);
@@ -918,36 +921,54 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
 
       {/* Input Area */}
       <div className="pb-1 lg:pb-2 pt-2">
-        <div className="relative flex items-end gap-2 bg-white/5 border border-white/10 rounded-3xl p-2 transition-all focus-within:border-alchemy-accent/40">
-          <button
-            onClick={() => setInputMethod(inputMethod === 'voice' ? 'text' : 'voice')}
-            className="p-3 rounded-full text-alchemy-paper/40 hover:text-alchemy-accent transition-colors"
-          >
-            {inputMethod === 'voice' ? <Keyboard size={20} /> : <Mic size={20} />}
-          </button>
-
-          <div className="flex-1 min-h-[48px] flex items-center">
-            {inputMethod === 'voice' ? (
-              <button
-                onMouseDown={startRecording}
-                onMouseUp={stopRecording}
-                onMouseLeave={stopRecording}
-                onTouchStart={startRecording}
-                onTouchEnd={stopRecording}
-                disabled={isTranscribing}
-                className={cn(
-                  "w-full py-3 px-4 text-left text-alchemy-paper/40 font-normal italic flex items-center gap-3 group text-[14px] select-none transition-all",
-                  isRecording && "bg-alchemy-accent/10 text-alchemy-accent",
-                  isTranscribing && "opacity-50"
-                )}
-              >
-                <div className={cn(
-                  "w-2.5 h-2.5 rounded-full bg-alchemy-accent",
-                  isRecording && "animate-ping"
-                )} />
-                {isRecording ? "正在倾听你的内心 (松手发送)..." : isTranscribing ? "正在转录..." : "长按倾听你的内心..."}
-              </button>
-            ) : (
+        {inputMethod === 'voice' ? (
+          <div className="relative flex items-center gap-3">
+            <button
+              onClick={() => setInputMethod('text')}
+              className="shrink-0 p-2 text-alchemy-paper/30 hover:text-alchemy-accent transition-colors"
+            >
+              <Keyboard size={20} />
+            </button>
+            <button
+              onMouseDown={startRecording}
+              onMouseUp={stopRecording}
+              onMouseLeave={stopRecording}
+              onTouchStart={startRecording}
+              onTouchEnd={stopRecording}
+              disabled={isTranscribing}
+              className={cn(
+                "flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-2xl transition-all select-none",
+                "bg-white/8 text-alchemy-paper/50 active:bg-white/12",
+                isTranscribing && "opacity-50"
+              )}
+            >
+              {isRecording ? (
+                <div className="h-5 w-full">
+                  <VoiceWaveform
+                    isActive={isRecording}
+                    audioLevel={audioLevel}
+                    barCount={40}
+                  />
+                </div>
+              ) : (
+                <>
+                  <Mic size={18} className="text-alchemy-accent/60" />
+                  <span className="text-sm font-sans" style={{ fontWeight: 400 }}>
+                    {isTranscribing ? '正在转录...' : '按住说话'}
+                  </span>
+                </>
+              )}
+            </button>
+          </div>
+        ) : (
+          <div className="relative flex items-end gap-2 bg-white/5 border border-white/10 rounded-3xl p-2 transition-all focus-within:border-alchemy-accent/40">
+            <button
+              onClick={() => setInputMethod('voice')}
+              className="p-3 rounded-full text-alchemy-paper/40 hover:text-alchemy-accent transition-colors"
+            >
+              <Mic size={20} />
+            </button>
+            <div className="flex-1 min-h-[48px] flex items-center">
               <textarea
                 ref={textareaRef}
                 value={input}
@@ -962,10 +983,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                 rows={1}
                 className="w-full bg-transparent border-none focus:ring-0 focus:outline-none py-3 px-2 resize-none font-sans font-normal text-[14px] placeholder:opacity-30 max-h-32 overflow-y-auto"
               />
-            )}
-          </div>
-
-          {inputMethod === 'text' && (
+            </div>
             <button
               onClick={() => handleSend()}
               disabled={!input.trim()}
@@ -973,8 +991,8 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
             >
               <Send size={20} />
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
       {/* Crisis Modal */}
       <AnimatePresence>
