@@ -922,6 +922,13 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
       {/* Input Area */}
       <div className="pb-1 lg:pb-2 pt-2">
         <div className="flex items-center gap-2.5 w-full">
+          <button
+            onClick={() => setInputMethod(inputMethod === 'voice' ? 'text' : 'voice')}
+            className="shrink-0 p-2.5 rounded-full text-alchemy-paper/30 hover:text-alchemy-accent transition-colors"
+          >
+            {inputMethod === 'voice' ? <Keyboard size={20} /> : <Mic size={20} />}
+          </button>
+
           {inputMethod === 'voice' ? (
             <button
               onMouseDown={startRecording}
@@ -978,13 +985,6 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
               </button>
             </div>
           )}
-
-          <button
-            onClick={() => setInputMethod(inputMethod === 'voice' ? 'text' : 'voice')}
-            className="shrink-0 p-2.5 rounded-full text-alchemy-paper/30 hover:text-alchemy-accent transition-colors"
-          >
-            {inputMethod === 'voice' ? <Keyboard size={20} /> : <Mic size={20} />}
-          </button>
         </div>
       </div>
       {/* Crisis Modal */}
