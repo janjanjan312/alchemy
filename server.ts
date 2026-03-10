@@ -230,17 +230,26 @@ app.delete('/api/symbols/:userId/:term', async (req, res) => {
 app.get('/api/projections/:userId', async (req, res) => {
   const { userId } = req.params;
   const status = req.query.status as string | undefined;
+  const dedupFilter = 'AND id IN (SELECT MAX(id) FROM projections WHERE user_id = ? GROUP BY target, trait, archetype_id)';
   const rows = status
-    ? await dbAll('SELECT * FROM projections WHERE user_id = ? AND status = ? ORDER BY updated_at DESC', userId, status)
-    : await dbAll('SELECT * FROM projections WHERE user_id = ? ORDER BY updated_at DESC', userId);
-  res.json(rows);
+    ? await dbAll(`SELECT * FROM projections WHERE user_id = ? AND status = ? ${dedupFilter} ORDER BY updated_at DESC`, userId, status, userId)
+    : await dbAll(`SELECT * FROM projections WHERE user_id = ? ${dedupFilter} ORDER BY updated_at DESC`, userId, userId);
+  res.json(rows.map((r: any) => ({ ...r, archetype: r.archetype_id })));
 });
 
 app.post('/api/projections', async (req, res) => {
   const { userId, target, trait, archetypeId } = req.body;
+  const aid = archetypeId || null;
+  const existing = aid
+    ? await dbGet('SELECT id FROM projections WHERE user_id = ? AND target = ? AND trait = ? AND archetype_id = ?', userId, target, trait, aid)
+    : await dbGet('SELECT id FROM projections WHERE user_id = ? AND target = ? AND trait = ? AND archetype_id IS NULL', userId, target, trait);
+  if (existing) {
+    res.json({ success: true, id: existing.id, deduplicated: true });
+    return;
+  }
   const result = await dbRun(
     'INSERT INTO projections (user_id, target, trait, archetype_id) VALUES (?, ?, ?, ?)',
-    userId, target, trait, archetypeId || null
+    userId, target, trait, aid
   );
   res.json({ success: true, id: result.lastInsertRowid });
 });

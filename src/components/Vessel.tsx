@@ -182,12 +182,33 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
   useEffect(() => {
     (async () => {
       try {
-        const [symRes, projRes] = await Promise.all([
+        const [symRes, projRes, profileRes] = await Promise.all([
           fetch(`/api/symbols/${userId}`),
           fetch(`/api/projections/${userId}`),
+          fetch(`/api/profile/${userId}`),
         ]);
-        setUserSymbols(await symRes.json());
-        setUserProjections(await projRes.json());
+        const syms = await symRes.json();
+        const projs = await projRes.json();
+        const profile = await profileRes.json();
+        setUserSymbols(syms);
+        setUserProjections(projs);
+
+        setSavedSymbols(new Set(syms.map((s: any) => s.term)));
+        setSavedProjections(new Set(
+          projs.map((p: any) => `${p.target}|${p.trait}|${p.archetype}`)
+        ));
+
+        if (profile?.archetypes) {
+          const keys = new Set<string>();
+          for (const a of profile.archetypes) {
+            if (a.personal_manifestation) {
+              for (const line of a.personal_manifestation.split('\n').filter(Boolean)) {
+                keys.add(`${a.archetype_id}|${line}`);
+              }
+            }
+          }
+          setSavedInsights(keys);
+        }
       } catch {}
     })();
   }, [userId]);
