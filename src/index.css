@@ -116,6 +116,24 @@
   to { transform: translateY(-100vh) translateX(20px); }
 }
 
+.nav-glow {
+  animation: nav-pulse 2s ease-in-out infinite;
+}
+
+@keyframes nav-pulse {
+  0%, 100% { filter: drop-shadow(0 0 0 transparent); }
+  50% { filter: drop-shadow(0 0 8px rgba(232, 213, 163, 0.6)); }
+}
+
+.badge-glow {
+  animation: badge-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(232, 213, 163, 0.4), inset 0 0 2px rgba(232, 213, 163, 0.2); }
+  50% { box-shadow: 0 0 10px rgba(232, 213, 163, 0.8), 0 0 20px rgba(232, 213, 163, 0.3), inset 0 0 4px rgba(232, 213, 163, 0.4); }
+}
+
 .glass {
   @apply bg-white/5 backdrop-blur-xl border border-white/10;
 }

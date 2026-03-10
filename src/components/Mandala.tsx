@@ -17,9 +17,12 @@ interface MandalaProps {
   projections?: ProjectionEntry[];
   onProjectionUpdate?: (id: number, status: 'active' | 'integrated') => void;
   onMarkSeen?: (id: string) => void;
+  newSymbols?: boolean;
+  newProjections?: boolean;
+  onPanelSeen?: (panel: 'symbols' | 'projections') => void;
 }
 
-export default function Mandala({ archetypes, onTalk, symbols = [], projections = [], onProjectionUpdate, onMarkSeen }: MandalaProps) {
+export default function Mandala({ archetypes, onTalk, symbols = [], projections = [], onProjectionUpdate, onMarkSeen, newSymbols, newProjections, onPanelSeen }: MandalaProps) {
   const sorted = [...archetypes].sort((a, b) => {
     const aUnlocked = a.unlocked ? 1 : 0;
     const bUnlocked = b.unlocked ? 1 : 0;
@@ -91,30 +94,48 @@ export default function Mandala({ archetypes, onTalk, symbols = [], projections 
         <div className="shrink-0 px-6 py-2 flex gap-2">
           {symbols.length > 0 && (
             <button
-              onClick={() => setShowPanel(showPanel === 'symbols' ? 'none' : 'symbols')}
+              onClick={() => {
+                const next = showPanel === 'symbols' ? 'none' : 'symbols';
+                setShowPanel(next);
+                if (next === 'symbols' && newSymbols) onPanelSeen?.('symbols');
+              }}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] transition-all",
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] transition-all relative",
                 showPanel === 'symbols'
                   ? "bg-alchemy-accent/15 text-alchemy-accent border border-alchemy-accent/25"
-                  : "bg-white/5 text-white/40 border border-white/5"
+                  : newSymbols
+                    ? "bg-alchemy-accent/10 text-alchemy-accent border border-alchemy-accent/30 badge-glow"
+                    : "bg-white/5 text-white/40 border border-white/5"
               )}
             >
               <BookOpen size={12} />
               <span>词典 {symbols.length}</span>
+              {newSymbols && showPanel !== 'symbols' && (
+                <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-alchemy-accent animate-pulse shadow-[0_0_6px_rgba(232,213,163,0.8)]" />
+              )}
             </button>
           )}
           {projections.length > 0 && (
             <button
-              onClick={() => setShowPanel(showPanel === 'projections' ? 'none' : 'projections')}
+              onClick={() => {
+                const next = showPanel === 'projections' ? 'none' : 'projections';
+                setShowPanel(next);
+                if (next === 'projections' && newProjections) onPanelSeen?.('projections');
+              }}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] transition-all",
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] transition-all relative",
                 showPanel === 'projections'
                   ? "bg-alchemy-accent/15 text-alchemy-accent border border-alchemy-accent/30"
-                  : "bg-white/5 text-white/40 border border-white/5"
+                  : newProjections
+                    ? "bg-alchemy-accent/10 text-alchemy-accent border border-alchemy-accent/30 badge-glow"
+                    : "bg-white/5 text-white/40 border border-white/5"
               )}
             >
               <ScanEye size={12} />
               <span>投射 {projections.filter(p => p.status === 'active').length}</span>
+              {newProjections && showPanel !== 'projections' && (
+                <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-alchemy-accent animate-pulse shadow-[0_0_6px_rgba(232,213,163,0.8)]" />
+              )}
             </button>
           )}
         </div>

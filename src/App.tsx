@@ -19,6 +19,11 @@ export default function App() {
   const [projections, setProjections] = useState<ProjectionEntry[]>([]);
   const [openArchetypes, setOpenArchetypes] = useState<string[]>([]);
   const [activeArchetype, setActiveArchetype] = useState<string | null>(null);
+  const [pendingUpdates, setPendingUpdates] = useState<{ insight: boolean; symbol: boolean; projection: boolean }>({ insight: false, symbol: false, projection: false });
+
+  const handleContentUpdate = useCallback((type: 'insight' | 'symbol' | 'projection') => {
+    setPendingUpdates(prev => ({ ...prev, [type]: true }));
+  }, []);
   const [userId] = useState(() => {
     const key = 'psyche_device_id';
     let id = localStorage.getItem(key);
@@ -123,9 +128,13 @@ export default function App() {
     <div className="flex flex-col h-full bg-alchemy-black overflow-hidden relative">
       <Stars />
       
-      <Navigation activeTab={activeTab} setActiveTab={(tab) => {
+      <Navigation activeTab={activeTab} hasUpdates={pendingUpdates.insight || pendingUpdates.symbol || pendingUpdates.projection} setActiveTab={(tab) => {
         setActiveTab(tab);
-        if (tab === 'mandala') { fetchProfile(); fetchUserData(); }
+        if (tab === 'mandala') {
+          setPendingUpdates({ insight: false, symbol: false, projection: false });
+          fetchProfile();
+          fetchUserData();
+        }
       }} />
       
       <main className="flex-1 relative overflow-hidden" style={{ paddingBottom: 'calc(64px + env(safe-area-inset-bottom, 8px))' }}>
@@ -148,6 +157,7 @@ export default function App() {
               <Vessel
                 userId={userId}
                 onInsightArchive={handleInsightArchive}
+                onContentUpdate={handleContentUpdate}
                 openArchetypes={openArchetypes}
                 activeArchetype={activeArchetype}
                 onSelectArchetype={setActiveArchetype}
@@ -161,6 +171,9 @@ export default function App() {
                 projections={projections}
                 onProjectionUpdate={handleProjectionUpdate}
                 onMarkSeen={handleMarkSeen}
+                newSymbols={pendingUpdates.symbol}
+                newProjections={pendingUpdates.projection}
+                onPanelSeen={(panel) => setPendingUpdates(prev => ({ ...prev, [panel === 'symbols' ? 'symbol' : 'projection']: false }))}
               />
             )}
           </motion.div>

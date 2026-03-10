@@ -147,16 +147,23 @@ interface ArchetypeSession {
 interface VesselProps {
   userId: string;
   onInsightArchive: (archetypeId: string, content: string, guidance?: string) => void;
+  onContentUpdate?: (type: 'insight' | 'symbol' | 'projection') => void;
   openArchetypes?: string[];
   activeArchetype?: string | null;
   onSelectArchetype?: (id: string | null) => void;
   onCloseArchetype?: (id: string) => void;
 }
 
-export default function Vessel({ userId, onInsightArchive, openArchetypes = [], activeArchetype, onSelectArchetype, onCloseArchetype }: VesselProps) {
+export default function Vessel({ userId, onInsightArchive, onContentUpdate, openArchetypes = [], activeArchetype, onSelectArchetype, onCloseArchetype }: VesselProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const [mode, setMode] = useState<Mode>('Free Talk');
+  const [mode, _setMode] = useState<Mode>(() => {
+    return (localStorage.getItem('alchemy_last_mode') as Mode) || 'Free Talk';
+  });
+  const setMode = useCallback((m: Mode) => {
+    localStorage.setItem('alchemy_last_mode', m);
+    _setMode(m);
+  }, []);
   const [isLoading, setIsLoading] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -173,6 +180,9 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
   const [savedProjections, setSavedProjections] = useState<Set<string>>(new Set());
   const [savedInsights, setSavedInsights] = useState<Set<string>>(new Set());
   const [savedSymbols, setSavedSymbols] = useState<Set<string>>(new Set());
+  const [tabOrder, setTabOrder] = useState<Record<string, number>>(() => {
+    try { return JSON.parse(localStorage.getItem('alchemy_tab_order') || '{}'); } catch { return {}; }
+  });
   const [historySummaries, setHistorySummaries] = useState<SessionSummary[]>([]);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const archetypeSessions = useRef<Map<string, ArchetypeSession>>(new Map());
@@ -363,6 +373,13 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
     const batch = pendingUserMsgs.current;
     pendingUserMsgs.current = [];
     if (batch.length === 0) return;
+
+    const tabId = isArchetypeActive && activeArchetype ? activeArchetype : mode;
+    setTabOrder(prev => {
+      const next = { ...prev, [tabId]: Date.now() };
+      localStorage.setItem('alchemy_tab_order', JSON.stringify(next));
+      return next;
+    });
 
     setIsLoading(true);
 
@@ -646,11 +663,12 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
         }
         return [...prev, { term, meaning }];
       });
+      onContentUpdate?.('symbol');
     } catch (e) {
       console.error('Failed to save symbol:', e);
       setSavedSymbols(prev => { const next = new Set(prev); next.delete(term); return next; });
     }
-  }, [userId, savedSymbols]);
+  }, [userId, savedSymbols, onContentUpdate]);
 
   const handleSaveProjection = useCallback(async (target: string, trait: string, archetype: string) => {
     const key = `${target}|${trait}|${archetype}`;
@@ -668,10 +686,11 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
       const archetypeName = ARCHETYPE_NAMES[archetype] || archetype;
       const guidanceText = `留意你对「${target}」的「${trait}」感受——它可能映射着你与内在${archetypeName}的未完成对话。今天试着问自己：这份感受最早出现在什么时候？`;
       onInsightArchive(archetype, insightText, guidanceText);
+      onContentUpdate?.('projection');
     } catch (e) {
       console.error('Failed to save projection:', e);
     }
-  }, [userId, savedProjections, onInsightArchive]);
+  }, [userId, savedProjections, onInsightArchive, onContentUpdate]);
 
   const handleSaveInsight = useCallback(async (archetypeId: string, content: string) => {
     const key = `${archetypeId}|${content}`;
@@ -680,7 +699,8 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
     const archetypeName = ARCHETYPE_NAMES[archetypeId] || archetypeId;
     const guidanceText = `你发现了关于内在「${archetypeName}」的重要洞察。今天试着留意生活中与这份觉察相呼应的时刻。`;
     onInsightArchive(archetypeId, content, guidanceText);
-  }, [savedInsights, onInsightArchive]);
+    onContentUpdate?.('insight');
+  }, [savedInsights, onInsightArchive, onContentUpdate]);
 
   return (
     <div className="flex flex-col h-full max-w-4xl mx-auto px-3 lg:px-4">
@@ -694,59 +714,57 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
             <Menu size={20} />
           </button>
         )}
-        { [
-          { id: 'Free Talk', icon: Sparkles, label: '探索' },
-          { id: 'Projection Work', icon: Eye, label: '投射' },
-          { id: 'Dream Weaver', icon: Moon, label: '梦境' },
-        ].map((m) => (
-          <button
-            key={m.id}
-            onClick={() => { onSelectArchetype?.(null); setMode(m.id as Mode); }}
-            className={cn(
-              "flex items-center gap-2 px-4 py-2.5 rounded-full transition-all duration-500 text-[13px] whitespace-nowrap",
-              !isArchetypeActive && mode === m.id
-                ? "bg-alchemy-accent text-alchemy-black shadow-[0_0_15px_rgba(232,213,163,0.3)]"
-                : "bg-white/5 text-alchemy-paper/60 hover:bg-white/10"
-            )}
-          >
-            <m.icon size={18} />
-            <span className="font-sans font-normal tracking-wider">{m.label}</span>
-          </button>
-        ))}
-        {openArchetypes.map(archId => {
-          const label = ARCHETYPE_NAMES[archId] || archId;
-          const isActive = activeArchetype === archId;
-          return (
-            <button
-              key={`arch-${archId}`}
-              onClick={() => onSelectArchetype?.(archId)}
-              className={cn(
-                "flex items-center gap-2 px-4 py-2.5 rounded-full transition-all duration-500 text-[13px] whitespace-nowrap",
-                isActive
-                  ? "bg-alchemy-accent text-alchemy-black shadow-[0_0_15px_rgba(232,213,163,0.3)]"
-                  : "bg-white/5 text-alchemy-paper/60 hover:bg-white/10"
-              )}
-            >
-              <Users size={16} />
-              <span className="font-sans font-normal tracking-wider">{label}</span>
-              <X
-                size={14}
-                className="ml-1 opacity-60 hover:opacity-100 cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onCloseArchetype?.(archId);
-                  archetypeSessions.current.delete(archId);
+        {(() => {
+          const modeTabs = [
+            { id: 'Free Talk', icon: Sparkles, label: '探索', type: 'mode' as const },
+            { id: 'Projection Work', icon: Eye, label: '投射', type: 'mode' as const },
+            { id: 'Dream Weaver', icon: Moon, label: '梦境', type: 'mode' as const },
+          ];
+          const archTabs = openArchetypes.map(archId => ({
+            id: archId, icon: Users, label: ARCHETYPE_NAMES[archId] || archId, type: 'archetype' as const,
+          }));
+          const all = [...modeTabs, ...archTabs];
+          const activeTabId = isArchetypeActive ? activeArchetype : mode;
+          const sorted = [...all].sort((a, b) => (tabOrder[b.id] || 0) - (tabOrder[a.id] || 0));
+          return sorted.map(tab => {
+            const isActive = tab.id === activeTabId;
+            return (
+              <button
+                key={tab.type === 'archetype' ? `arch-${tab.id}` : tab.id}
+                onClick={() => {
+                  if (tab.type === 'archetype') onSelectArchetype?.(tab.id);
+                  else { onSelectArchetype?.(null); setMode(tab.id as Mode); }
                 }}
-              />
-            </button>
-          );
-        })}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2.5 rounded-full transition-all duration-500 text-[13px] whitespace-nowrap",
+                  isActive
+                    ? "bg-alchemy-accent text-alchemy-black shadow-[0_0_15px_rgba(232,213,163,0.3)]"
+                    : "bg-white/5 text-alchemy-paper/60 hover:bg-white/10"
+                )}
+              >
+                <tab.icon size={tab.type === 'archetype' ? 16 : 18} />
+                <span className="font-sans font-normal tracking-wider">{tab.label}</span>
+                {tab.type === 'archetype' && (
+                  <X
+                    size={14}
+                    className="ml-1 opacity-60 hover:opacity-100 cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onCloseArchetype?.(tab.id);
+                      archetypeSessions.current.delete(tab.id);
+                    }}
+                  />
+                )}
+              </button>
+            );
+          });
+        })()}
       </div>
 
       {/* Chat Area */}
       <div 
         ref={scrollRef}
-        className="flex-1 overflow-y-auto space-y-6 lg:space-y-8 py-4 lg:py-8"
+        className="flex-1 overflow-y-auto space-y-6 lg:space-y-8 py-4 lg:py-8 no-scrollbar"
       >
         <AnimatePresence initial={false}>
           {messages.map((msg, i) => (
@@ -772,13 +790,13 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
                     <span className="w-2 h-2 rounded-full bg-alchemy-accent/60 animate-bounce" style={{ animationDelay: '300ms' }} />
                   </div>
                 ) : (
-                <div className="prose prose-sm prose-invert max-w-none font-normal text-[14px] leading-relaxed opacity-90">
+                <div className="prose prose-sm prose-invert max-w-none font-normal text-[14px] leading-relaxed opacity-90 [&>p+p]:mt-4">
                   <ReactMarkdown>{msg.content}</ReactMarkdown>
                 </div>
                 )}
               </div>
               
-              {msg.insight && (
+              {msg.insight && messages.findIndex(m => m.insight?.type === msg.insight!.type && m.insight?.content === msg.insight!.content) === i && (
                 <motion.div
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
@@ -804,7 +822,7 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
                 </motion.div>
               )}
 
-              {msg.symbol && (
+              {msg.symbol && messages.findIndex(m => m.symbol?.term === msg.symbol!.term) === i && (
                 <motion.div
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
@@ -833,7 +851,7 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
                 </motion.div>
               )}
 
-              {msg.projection && (
+              {msg.projection && messages.findIndex(m => m.projection && `${m.projection.target}|${m.projection.trait}|${m.projection.archetype}` === `${msg.projection!.target}|${msg.projection!.trait}|${msg.projection!.archetype}`) === i && (
                 <motion.div
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
@@ -860,7 +878,7 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
                     className={cn(
                       "w-full py-2.5 rounded-xl text-sm font-sans font-semibold transition-all",
                       savedProjections.has(`${msg.projection.target}|${msg.projection.trait}|${msg.projection.archetype}`)
-                        ? "bg-[rgba(232,213,163,0.02)] text-alchemy-accent/30 border border-alchemy-accent/6"
+                        ? "bg-[rgba(232,213,163,0.02)] text-alchemy-accent/30 border border-alchemy-accent/6 cursor-default"
                         : "bg-[rgba(232,213,163,0.06)] text-alchemy-accent border border-alchemy-accent/20 backdrop-blur-lg hover:bg-[rgba(232,213,163,0.1)]"
                     )}
                   >
