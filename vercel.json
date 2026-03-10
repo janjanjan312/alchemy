@@ -8,7 +8,6 @@
     "api/index.ts": { "maxDuration": 60, "includeFiles": "_compiled/**" }
   },
   "rewrites": [
-    { "source": "/api/health", "destination": "/api/health" },
     { "source": "/api/chat", "destination": "/api/chat" },
     { "source": "/api/transcribe", "destination": "/api/transcribe" },
     { "source": "/api/(.*)", "destination": "/api" },
