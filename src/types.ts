@@ -28,6 +28,7 @@ export interface Message {
   role: 'user' | 'model';
   content: string;
   timestamp: string;
+  isTranscribing?: boolean;
   insight?: {
     type: string;
     content: string;

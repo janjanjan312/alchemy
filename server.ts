@@ -20,11 +20,15 @@ export async function ensureSchema() {
   _schemaReady = true;
 }
 
-app.use(async (_req, _res, next) => {
+const DB_FREE_ROUTES = new Set(['/api/chat', '/api/transcribe']);
+
+app.use(async (req, _res, next) => {
+  if (DB_FREE_ROUTES.has(req.path)) return next();
   try {
     await ensureSchema();
     next();
   } catch (err) {
+    console.error('[DB] Schema init failed:', err);
     next(err);
   }
 });

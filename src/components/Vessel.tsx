@@ -155,6 +155,7 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
   const [sessionLoading, setSessionLoading] = useState(true);
   const [inputMethod, setInputMethod] = useState<'voice' | 'text'>('voice');
   const [isRecording, setIsRecording] = useState(false);
+  const [isTranscribing, setIsTranscribing] = useState(false);
   const [userSymbols, setUserSymbols] = useState<SymbolEntry[]>([]);
   const [userProjections, setUserProjections] = useState<ProjectionEntry[]>([]);
   const [showSidebar, setShowSidebar] = useState(false);
@@ -454,15 +455,58 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
     e.preventDefault();
     if (!isRecording) return;
     setIsRecording(false);
+    setIsTranscribing(true);
+
+    const placeholderMsg: Message = {
+      role: 'user',
+      content: '',
+      timestamp: new Date().toISOString(),
+      isTranscribing: true,
+    };
+    setMessages(prev => {
+      const updated = [...prev, placeholderMsg];
+      if (isArchetypeActive && activeArchetype) {
+        const session = archetypeSessions.current.get(activeArchetype);
+        if (session) session.messages = updated;
+      }
+      return updated;
+    });
 
     try {
       const text = await pushToTalkRef.current?.stop();
-      if (text) handleSend(text);
+      pushToTalkRef.current = null;
+
+      if (text?.trim()) {
+        const finalMsg: Message = { ...placeholderMsg, content: text, isTranscribing: false };
+        setMessages(prev => {
+          const updated = prev.map(m => m === placeholderMsg ? finalMsg : m);
+          if (isArchetypeActive && activeArchetype) {
+            const session = archetypeSessions.current.get(activeArchetype);
+            if (session) session.messages = updated;
+          }
+          return updated;
+        });
+        setIsTranscribing(false);
+        setIsThinking(true);
+
+        pendingUserMsgs.current.push(finalMsg);
+        if (!isLoading) {
+          if (replyTimer.current) clearTimeout(replyTimer.current);
+          replyTimer.current = setTimeout(() => {
+            triggerReply();
+          }, BATCH_DELAY);
+        }
+      } else {
+        setMessages(prev => prev.filter(m => m !== placeholderMsg));
+        setIsTranscribing(false);
+      }
     } catch (err) {
       console.error('Stop recording failed:', err);
+      setMessages(prev => prev.filter(m => m !== placeholderMsg));
+      setIsTranscribing(false);
+      pushToTalkRef.current = null;
     }
-    pushToTalkRef.current = null;
-  }, [isRecording, handleSend]);
+  }, [isRecording, isLoading, isArchetypeActive, activeArchetype, triggerReply]);
 
   const openSidebar = useCallback(async () => {
     setShowSidebar(true);
@@ -674,9 +718,17 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
                   ? "bg-alchemy-accent/10 border border-alchemy-accent/20 text-alchemy-paper" 
                   : "bg-white/5 border border-white/10 text-alchemy-paper/90"
               )}>
+                {msg.isTranscribing ? (
+                  <div className="flex items-center gap-1.5 py-1">
+                    <span className="w-2 h-2 rounded-full bg-alchemy-accent/60 animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-2 h-2 rounded-full bg-alchemy-accent/60 animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-2 h-2 rounded-full bg-alchemy-accent/60 animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </div>
+                ) : (
                 <div className="prose prose-sm prose-invert max-w-none font-normal text-[14px] leading-relaxed opacity-90">
                   <ReactMarkdown>{msg.content}</ReactMarkdown>
                 </div>
+                )}
               </div>
               
               {msg.insight && (
@@ -811,16 +863,18 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
                 onMouseLeave={stopRecording}
                 onTouchStart={startRecording}
                 onTouchEnd={stopRecording}
+                disabled={isTranscribing}
                 className={cn(
                   "w-full py-3 px-4 text-left text-alchemy-paper/40 font-normal italic flex items-center gap-3 group text-[14px] select-none transition-all",
-                  isRecording && "bg-alchemy-accent/10 text-alchemy-accent"
+                  isRecording && "bg-alchemy-accent/10 text-alchemy-accent",
+                  isTranscribing && "opacity-50"
                 )}
               >
                 <div className={cn(
                   "w-2.5 h-2.5 rounded-full bg-alchemy-accent",
                   isRecording && "animate-ping"
                 )} />
-                {isRecording ? "正在倾听你的内心 (松手发送)..." : "长按倾听你的内心..."}
+                {isRecording ? "正在倾听你的内心 (松手发送)..." : isTranscribing ? "正在转录..." : "长按倾听你的内心..."}
               </button>
             ) : (
               <textarea
