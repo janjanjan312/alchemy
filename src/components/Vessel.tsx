@@ -164,6 +164,7 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
   const [suggestedTopics] = useState(() => getRandomTopics(3));
   const [savedProjections, setSavedProjections] = useState<Set<string>>(new Set());
   const [savedInsights, setSavedInsights] = useState<Set<string>>(new Set());
+  const [savedSymbols, setSavedSymbols] = useState<Set<string>>(new Set());
   const [historySummaries, setHistorySummaries] = useState<SessionSummary[]>([]);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const archetypeSessions = useRef<Map<string, ArchetypeSession>>(new Map());
@@ -585,6 +586,8 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
   }, [mode, userId, sessionId, summarizeSession]);
 
   const handleSaveSymbol = useCallback(async (term: string, meaning: string) => {
+    if (savedSymbols.has(term)) return;
+    setSavedSymbols(prev => new Set(prev).add(term));
     try {
       await fetch('/api/symbols', {
         method: 'POST',
@@ -602,8 +605,9 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
       });
     } catch (e) {
       console.error('Failed to save symbol:', e);
+      setSavedSymbols(prev => { const next = new Set(prev); next.delete(term); return next; });
     }
-  }, [userId]);
+  }, [userId, savedSymbols]);
 
   const handleSaveProjection = useCallback(async (target: string, trait: string, archetype: string) => {
     const key = `${target}|${trait}|${archetype}`;
@@ -773,9 +777,15 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
                   <p className="text-[13px] font-normal italic mb-3 opacity-60">{msg.symbol.meaning}</p>
                   <button
                     onClick={() => handleSaveSymbol(msg.symbol!.term, msg.symbol!.meaning)}
-                    className="w-full py-2.5 rounded-xl bg-alchemy-accent/15 text-alchemy-accent border border-alchemy-accent/30 text-sm font-sans font-bold hover:bg-alchemy-accent/25 transition-colors"
+                    disabled={savedSymbols.has(msg.symbol.term)}
+                    className={cn(
+                      "w-full py-2.5 rounded-xl text-sm font-sans font-bold transition-all",
+                      savedSymbols.has(msg.symbol.term)
+                        ? "bg-alchemy-accent/5 text-alchemy-accent/50 border border-alchemy-accent/15 cursor-default"
+                        : "bg-alchemy-accent/15 text-alchemy-accent border border-alchemy-accent/30 hover:bg-alchemy-accent/25"
+                    )}
                   >
-                    存入词典
+                    {savedSymbols.has(msg.symbol.term) ? '已存入 ✓' : '存入词典'}
                   </button>
                 </motion.div>
               )}
