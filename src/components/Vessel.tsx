@@ -318,9 +318,25 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
     return () => { cancelled = true; };
   }, [mode, userId]);
 
+  const prevMsgLen = useRef(0);
+
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    if (!scrollRef.current) return;
+    const el = scrollRef.current;
+    const added = messages.length - prevMsgLen.current;
+    prevMsgLen.current = messages.length;
+
+    const isBatchLoad = added > 1 || added < 0;
+
+    const doScroll = () => {
+      if (!el) return;
+      el.scrollTo({ top: el.scrollHeight, behavior: isBatchLoad ? 'instant' : 'smooth' });
+    };
+
+    doScroll();
+    if (isBatchLoad) {
+      const timer = setTimeout(doScroll, 550);
+      return () => clearTimeout(timer);
     }
   }, [messages, isThinking]);
 
@@ -724,7 +740,7 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
       {/* Chat Area */}
       <div 
         ref={scrollRef}
-        className="flex-1 overflow-y-auto space-y-6 lg:space-y-8 py-4 lg:py-8 scroll-smooth"
+        className="flex-1 overflow-y-auto space-y-6 lg:space-y-8 py-4 lg:py-8"
       >
         <AnimatePresence initial={false}>
           {messages.map((msg, i) => (
