@@ -761,11 +761,11 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
                 <motion.div
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  className="mt-4 p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 max-w-[280px] lg:max-w-xs"
+                  className="mt-4 p-4 rounded-xl border border-amber-600/30 bg-amber-700/5 max-w-[280px] lg:max-w-xs"
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <BookOpen size={16} className="text-emerald-400" />
-                    <span className="text-xs uppercase tracking-widest font-sans font-bold text-emerald-400">新象征</span>
+                    <BookOpen size={16} className="text-amber-500" />
+                    <span className="text-xs uppercase tracking-widest font-sans font-bold text-amber-500">新象征</span>
                   </div>
                   <p className="text-[14px] font-normal mb-1 text-alchemy-paper">
                     「{msg.symbol.term}」
@@ -773,7 +773,7 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
                   <p className="text-[13px] font-normal italic mb-3 opacity-60">{msg.symbol.meaning}</p>
                   <button
                     onClick={() => handleSaveSymbol(msg.symbol!.term, msg.symbol!.meaning)}
-                    className="w-full py-2.5 rounded-xl bg-emerald-500/80 text-white text-sm font-sans font-bold hover:bg-emerald-500 transition-colors"
+                    className="w-full py-2.5 rounded-xl bg-amber-700/20 text-amber-400 border border-amber-600/35 text-sm font-sans font-bold hover:bg-amber-700/30 transition-colors"
                   >
                     存入词典
                   </button>
