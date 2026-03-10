@@ -5,7 +5,7 @@
   "functions": {
     "api/chat.ts": { "maxDuration": 60 },
     "api/transcribe.ts": { "maxDuration": 60 },
-    "api/index.ts": { "maxDuration": 60, "includeFiles": "server.ts,lib/**,src/server/**" }
+    "api/index.ts": { "maxDuration": 60, "includeFiles": "_compiled/**" }
   },
   "rewrites": [
     { "source": "/api/health", "destination": "/api/health" },
