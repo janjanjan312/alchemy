@@ -427,6 +427,10 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
       return updated;
     });
     setInput('');
+    if (textareaRef.current) {
+      textareaRef.current.value = '';
+      textareaRef.current.blur();
+    }
     setIsThinking(true);
 
     pendingUserMsgs.current.push(userMsg);
