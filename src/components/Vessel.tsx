@@ -821,7 +821,7 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
           ))}
         </AnimatePresence>
         
-        {mode === 'Free Talk' && messages.length <= 1 && !isThinking && (
+        {mode === 'Free Talk' && !isArchetypeActive && messages.length <= 1 && !isThinking && (
           <div className="flex flex-col gap-2 items-start">
             {suggestedTopics.map((topic, i) => (
               <button
