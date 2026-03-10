@@ -65,10 +65,10 @@ function groupSessions(sessions: any[]) {
 }
 
 const INITIAL_MESSAGES: Record<string, string> = {
-  'Projection Work': '最近有没有谁让你特别烦、特别崇拜、或者情绪反应特别大？聊聊看。',
-  'Dream Weaver': '最近做了什么梦？不管多零碎都可以说，我来帮你分析。',
-  'Active Imagination': '闭上眼，让意象自由流动。现在，你的内在世界中出现了谁，或者发生了什么？',
-  'Free Talk': '今天想聊点什么？什么都可以。',
+  'Projection Work': '在日常关系中，有些人会触发我们特别强烈的情绪——可能是莫名的烦躁、深深的崇拜、嫉妒或排斥。这些强烈反应往往不只关于对方，更映照着你内心尚未觉察的一面。\n\n**最近有没有谁让你情绪反应特别大？** 聊聊是什么人、什么事，以及你当时的感受。',
+  'Dream Weaver': '梦境是无意识最直接的语言，即使零碎的片段也可能藏着重要的信息。\n\n试着回忆最近的一个梦，可以从这几个角度描述：\n\n- **场景**：梦发生在哪里？周围是什么样的？\n- **人物**：出现了谁？你认识吗？\n- **情绪**：梦中和醒来后分别是什么感受？\n\n**不管多零碎都没关系，说说你印象最深的那个梦吧。**',
+  'Active Imagination': '积极想象是一种深度自我探索的方式——不需要刻意控制，只需安静地观察内心浮现的画面。\n\n找一个舒适的姿势放松下来，闭上眼睛，将注意力转向内在，让意象自由流动，不加评判地观察。\n\n当你准备好后，**描述你内心世界中浮现的画面**——出现了什么场景？有谁在那里？正在发生什么？',
+  'Free Talk': '这里是一个安全自由的探索空间。无论是近期的困惑、一段关系中的纠结、对自己的好奇，还是只是想倾诉——都可以。\n\n**今天，你心里最想聊的是什么？**',
 };
 
 const TOPIC_POOL = [
@@ -370,7 +370,7 @@ export default function Vessel({ userId, onInsightArchive, openArchetypes = [], 
         sid = ns.id;
         setSessionId(sid);
         const greeting = makeGreeting(mode);
-        persistMsg(sid!, userId, greeting, mode);
+        await persistMsg(sid!, userId, greeting, mode);
       } catch {
         sid = null;
       }
