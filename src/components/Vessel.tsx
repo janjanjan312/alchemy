@@ -921,14 +921,8 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
 
       {/* Input Area */}
       <div className="pb-1 lg:pb-2 pt-2">
-        {inputMethod === 'voice' ? (
-          <div className="relative flex items-center gap-3">
-            <button
-              onClick={() => setInputMethod('text')}
-              className="shrink-0 p-2 text-alchemy-paper/30 hover:text-alchemy-accent transition-colors"
-            >
-              <Keyboard size={20} />
-            </button>
+        <div className="flex items-center gap-2.5 w-full">
+          {inputMethod === 'voice' ? (
             <button
               onMouseDown={startRecording}
               onMouseUp={stopRecording}
@@ -937,7 +931,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
               onTouchEnd={stopRecording}
               disabled={isTranscribing}
               className={cn(
-                "flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-2xl transition-all select-none",
+                "flex-1 flex items-center justify-center gap-2 h-[48px] px-4 rounded-2xl transition-all select-none",
                 "bg-white/8 text-alchemy-paper/50 active:bg-white/12",
                 isTranscribing && "opacity-50"
               )}
@@ -959,16 +953,8 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                 </>
               )}
             </button>
-          </div>
-        ) : (
-          <div className="relative flex items-end gap-2 bg-white/5 border border-white/10 rounded-3xl p-2 transition-all focus-within:border-alchemy-accent/40">
-            <button
-              onClick={() => setInputMethod('voice')}
-              className="p-3 rounded-full text-alchemy-paper/40 hover:text-alchemy-accent transition-colors"
-            >
-              <Mic size={20} />
-            </button>
-            <div className="flex-1 min-h-[48px] flex items-center">
+          ) : (
+            <div className="flex-1 flex items-center gap-1.5 bg-white/8 rounded-2xl px-3 h-[48px]">
               <textarea
                 ref={textareaRef}
                 value={input}
@@ -981,18 +967,25 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                 }}
                 placeholder="输入你的感悟..."
                 rows={1}
-                className="w-full bg-transparent border-none focus:ring-0 focus:outline-none py-3 px-2 resize-none font-sans font-normal text-[14px] placeholder:opacity-30 max-h-32 overflow-y-auto"
+                className="flex-1 bg-transparent border-none focus:ring-0 focus:outline-none py-2 resize-none font-sans font-normal text-[14px] placeholder:opacity-30 max-h-32 overflow-y-auto"
               />
+              <button
+                onClick={() => handleSend()}
+                disabled={!input.trim()}
+                className="shrink-0 p-1.5 rounded-full bg-alchemy-accent text-alchemy-black disabled:opacity-30 transition-opacity"
+              >
+                <Send size={16} />
+              </button>
             </div>
-            <button
-              onClick={() => handleSend()}
-              disabled={!input.trim()}
-              className="p-3.5 rounded-full bg-alchemy-accent text-alchemy-black hover:scale-110 transition-transform disabled:opacity-50 disabled:scale-100 shadow-[0_0_15px_rgba(232,213,163,0.3)]"
-            >
-              <Send size={20} />
-            </button>
-          </div>
-        )}
+          )}
+
+          <button
+            onClick={() => setInputMethod(inputMethod === 'voice' ? 'text' : 'voice')}
+            className="shrink-0 p-2.5 rounded-full text-alchemy-paper/30 hover:text-alchemy-accent transition-colors"
+          >
+            {inputMethod === 'voice' ? <Keyboard size={20} /> : <Mic size={20} />}
+          </button>
+        </div>
       </div>
       {/* Crisis Modal */}
       <AnimatePresence>
