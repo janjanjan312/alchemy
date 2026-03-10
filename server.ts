@@ -20,7 +20,11 @@ export async function ensureSchema() {
   _schemaReady = true;
 }
 
-const DB_FREE_ROUTES = new Set(['/api/chat', '/api/transcribe']);
+const DB_FREE_ROUTES = new Set(['/api/chat', '/api/transcribe', '/api/health']);
+
+app.get('/api/health', (_req, res) => {
+  res.json({ ok: true, ts: Date.now(), turso: !!process.env.TURSO_DATABASE_URL });
+});
 
 app.use(async (req, _res, next) => {
   if (DB_FREE_ROUTES.has(req.path)) return next();
