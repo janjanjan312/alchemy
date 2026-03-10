@@ -95,7 +95,7 @@ export default function Mandala({ archetypes, onTalk, symbols = [], projections 
               className={cn(
                 "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] transition-all",
                 showPanel === 'symbols'
-                  ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                  ? "bg-alchemy-accent/15 text-alchemy-accent border border-alchemy-accent/25"
                   : "bg-white/5 text-white/40 border border-white/5"
               )}
             >
@@ -134,8 +134,8 @@ export default function Mandala({ archetypes, onTalk, symbols = [], projections 
               {showPanel === 'symbols' && (
                 <div className="space-y-2">
                   {symbols.map((s) => (
-                    <div key={s.term} className="flex items-start gap-3 p-2.5 rounded-lg bg-emerald-500/5 border border-emerald-500/10">
-                      <span className="text-[13px] font-medium text-emerald-400 shrink-0">「{s.term}」</span>
+                    <div key={s.term} className="flex items-start gap-3 p-2.5 rounded-lg bg-alchemy-accent/5 border border-alchemy-accent/10">
+                      <span className="text-[13px] font-medium text-alchemy-accent shrink-0">「{s.term}」</span>
                       <span className="text-[12px] text-white/50 italic">{s.meaning}</span>
                     </div>
                   ))}
@@ -161,7 +161,7 @@ export default function Mandala({ archetypes, onTalk, symbols = [], projections 
                         </button>
                       )}
                       {p.status === 'integrated' && (
-                        <span className="shrink-0 ml-2 text-[10px] text-emerald-400/60">已整合</span>
+                        <span className="shrink-0 ml-2 text-[10px] text-alchemy-accent/60">已整合</span>
                       )}
                     </div>
                   ))}
