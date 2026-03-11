@@ -47,7 +47,10 @@
 
   #root {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: calc(-1 * env(safe-area-inset-bottom, 0px));
     overflow: hidden;
   }
 
@@ -68,7 +71,10 @@
 
     #root {
       position: relative;
-      inset: auto;
+      top: auto;
+      left: auto;
+      right: auto;
+      bottom: auto;
       width: auto;
       height: 100%;
       max-height: 932px;
