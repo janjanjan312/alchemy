@@ -190,6 +190,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
   const archetypeSessions = useRef<Map<string, ArchetypeSession>>(new Map());
   const skipNextModeLoad = useRef(false);
   const normalMessages = useRef<{ mode: Mode; messages: Message[]; sessionId: string | null } | null>(null);
+  const modeCache = useRef<Map<Mode, { messages: Message[]; sessionId: string | null }>>(new Map());
   const messagesRef = useRef(messages);
   messagesRef.current = messages;
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -198,6 +199,12 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
   const pushToTalkRef = useRef<PushToTalkController | null>(null);
 
   const isArchetypeActive = !!activeArchetype && openArchetypes.includes(activeArchetype);
+
+  useEffect(() => {
+    if (!isArchetypeActive && messages.length > 0) {
+      modeCache.current.set(mode, { messages, sessionId });
+    }
+  }, [messages, mode, sessionId, isArchetypeActive]);
 
   useEffect(() => {
     (async () => {
@@ -288,6 +295,15 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
       skipNextModeLoad.current = false;
       return;
     }
+
+    const cached = modeCache.current.get(mode);
+    if (cached) {
+      setMessages(cached.messages);
+      setSessionId(cached.sessionId);
+      setSessionLoading(false);
+      return;
+    }
+
     let cancelled = false;
 
     (async () => {
@@ -315,8 +331,9 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
           if (cancelled) return;
 
           if (dbMessages.length > 0) {
+            const msgs = dbMessages.map(dbMsgToMessage);
             setSessionId(sid);
-            setMessages(dbMessages.map(dbMsgToMessage));
+            setMessages(msgs);
             setSessionLoading(false);
             return;
           }
