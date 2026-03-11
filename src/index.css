@@ -36,22 +36,14 @@
     -webkit-user-select: none;
     user-select: none;
     overscroll-behavior: none;
-    position: relative;
-    width: 100%;
-    min-height: 100dvh;
-    height: 100dvh;
-    overflow: hidden;
     background: #050505;
+    margin: 0;
     padding: 0;
   }
 
   #root {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: calc(-1 * env(safe-area-inset-bottom, 0px));
-    overflow: hidden;
+    width: 100%;
+    min-height: 100dvh;
   }
 
   input, textarea {
@@ -70,11 +62,6 @@
     }
 
     #root {
-      position: relative;
-      top: auto;
-      left: auto;
-      right: auto;
-      bottom: auto;
       width: auto;
       height: 100%;
       max-height: 932px;
