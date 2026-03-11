@@ -80,7 +80,7 @@ function TabItem({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center gap-0.5 py-1 px-5 rounded-xl transition-all duration-300 min-w-[72px] active:scale-95 relative",
+        "flex flex-col items-center gap-0.5 transition-all duration-300 active:scale-95 relative",
         active
           ? "text-alchemy-accent"
           : hasUpdates
