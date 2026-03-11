@@ -739,7 +739,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                   else { onSelectArchetype?.(null); setMode(tab.id as Mode); }
                 }}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-2.5 rounded-full transition-all duration-500 text-[13px] whitespace-nowrap",
+                  "flex items-center gap-2 px-4 py-2.5 rounded-full transition-all duration-500 text-[16px] whitespace-nowrap",
                   isActive
                     ? "bg-alchemy-accent text-alchemy-black shadow-[0_0_15px_rgba(232,213,163,0.3)]"
                     : "bg-white/5 text-alchemy-paper/60 hover:bg-white/10"
@@ -793,7 +793,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                     <span className="w-2 h-2 rounded-full bg-alchemy-accent/60 animate-bounce" style={{ animationDelay: '300ms' }} />
                   </div>
                 ) : (
-                <div className="prose prose-base prose-invert max-w-none font-normal text-[18px] leading-relaxed opacity-90 [&>p+p]:mt-4">
+                <div className="prose prose-sm prose-invert max-w-none font-normal text-[16px] leading-relaxed opacity-90 [&>p+p]:mt-4">
                   <ReactMarkdown>{msg.content}</ReactMarkdown>
                 </div>
                 )}
@@ -807,14 +807,14 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <Sparkles size={16} className="text-alchemy-accent" />
-                    <span className="text-xs uppercase tracking-widest font-sans font-bold text-alchemy-accent">新洞察</span>
+                    <span className="text-[14px] uppercase tracking-widest font-sans font-bold text-alchemy-accent">新洞察</span>
                   </div>
-                  <p className="text-[18px] font-normal italic mb-3 opacity-80">"{msg.insight.content}"</p>
+                  <p className="text-[16px] font-normal italic mb-3 opacity-80">"{msg.insight.content}"</p>
                   <button 
                     onClick={() => handleSaveInsight(msg.insight!.type, msg.insight!.content)}
                     disabled={savedInsights.has(`${msg.insight.type}|${msg.insight.content}`)}
                     className={cn(
-                      "w-full py-2.5 rounded-xl text-sm font-sans font-semibold transition-all",
+                      "w-full py-2.5 rounded-xl text-[16px] font-sans font-semibold transition-all",
                       savedInsights.has(`${msg.insight.type}|${msg.insight.content}`)
                         ? "bg-alchemy-accent/10 text-alchemy-accent/60 border border-alchemy-accent/20 cursor-default"
                         : "bg-[rgba(232,213,163,0.06)] text-alchemy-accent border border-alchemy-accent/20 backdrop-blur-lg hover:bg-[rgba(232,213,163,0.1)]"
@@ -833,17 +833,17 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <BookOpen size={16} className="text-alchemy-accent/85" />
-                    <span className="text-xs uppercase tracking-widest font-sans font-bold text-alchemy-accent/85">新象征</span>
+                    <span className="text-[14px] uppercase tracking-widest font-sans font-bold text-alchemy-accent/85">新象征</span>
                   </div>
-                  <p className="text-[18px] font-normal mb-1 text-alchemy-paper">
+                  <p className="text-[16px] font-normal mb-1 text-alchemy-paper">
                     「{msg.symbol.term}」
                   </p>
-                  <p className="text-[13px] font-normal italic mb-3 opacity-60">{msg.symbol.meaning}</p>
+                  <p className="text-[16px] font-normal italic mb-3 opacity-60">{msg.symbol.meaning}</p>
                   <button
                     onClick={() => handleSaveSymbol(msg.symbol!.term, msg.symbol!.meaning)}
                     disabled={savedSymbols.has(msg.symbol.term)}
                     className={cn(
-                      "w-full py-2.5 rounded-xl text-sm font-sans font-bold transition-all",
+                      "w-full py-2.5 rounded-xl text-[16px] font-sans font-bold transition-all",
                       savedSymbols.has(msg.symbol.term)
                         ? "bg-alchemy-accent/5 text-alchemy-accent/50 border border-alchemy-accent/15 cursor-default"
                         : "bg-alchemy-accent/15 text-alchemy-accent border border-alchemy-accent/30 hover:bg-alchemy-accent/25"
@@ -862,16 +862,16 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <ScanEye size={16} className="text-alchemy-accent/70" />
-                    <span className="text-xs uppercase tracking-widest font-sans font-bold text-alchemy-accent/70">投射识别</span>
+                    <span className="text-[14px] uppercase tracking-widest font-sans font-bold text-alchemy-accent/70">投射识别</span>
                   </div>
                   <div className="space-y-1 mb-3">
-                    <p className="text-[13px] font-normal text-alchemy-paper/80">
+                    <p className="text-[16px] font-normal text-alchemy-paper/80">
                       <span className="text-white/40">对象</span> {msg.projection.target}
                     </p>
-                    <p className="text-[13px] font-normal text-alchemy-paper/80">
+                    <p className="text-[16px] font-normal text-alchemy-paper/80">
                       <span className="text-white/40">特质</span> {msg.projection.trait}
                     </p>
-                    <p className="text-[13px] font-normal text-alchemy-paper/80">
+                    <p className="text-[16px] font-normal text-alchemy-paper/80">
                       <span className="text-white/40">原型</span> {msg.projection.archetype}
                     </p>
                   </div>
@@ -879,7 +879,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                     onClick={() => handleSaveProjection(msg.projection!.target, msg.projection!.trait, msg.projection!.archetype)}
                     disabled={savedProjections.has(`${msg.projection.target}|${msg.projection.trait}|${msg.projection.archetype}`)}
                     className={cn(
-                      "w-full py-2.5 rounded-xl text-sm font-sans font-semibold transition-all",
+                      "w-full py-2.5 rounded-xl text-[16px] font-sans font-semibold transition-all",
                       savedProjections.has(`${msg.projection.target}|${msg.projection.trait}|${msg.projection.archetype}`)
                         ? "bg-[rgba(232,213,163,0.02)] text-alchemy-accent/30 border border-alchemy-accent/6 cursor-default"
                         : "bg-[rgba(232,213,163,0.06)] text-alchemy-accent border border-alchemy-accent/20 backdrop-blur-lg hover:bg-[rgba(232,213,163,0.1)]"
@@ -901,7 +901,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
               <button
                 key={i}
                 onClick={() => handleSend(topic)}
-                className="text-left text-[13px] text-alchemy-paper/60 px-4 py-2.5 rounded-2xl border border-white/8 bg-white/3 hover:bg-white/8 hover:border-alchemy-accent/20 hover:text-alchemy-paper/80 transition-all"
+                className="text-left text-[16px] text-alchemy-paper/60 px-4 py-2.5 rounded-2xl border border-white/8 bg-white/3 hover:bg-white/8 hover:border-alchemy-accent/20 hover:text-alchemy-paper/80 transition-all"
               >
                 {topic}
               </button>
@@ -913,7 +913,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
           <div className="flex justify-start">
             <div className="bg-white/5 border border-white/10 rounded-2xl px-5 py-3.5 flex items-center gap-3">
               <Loader2 className="animate-spin text-alchemy-accent" size={16} />
-              <span className="text-[18px] font-normal italic opacity-60">炼金术师正在沉思...</span>
+              <span className="text-[16px] font-normal italic opacity-60">炼金术师正在沉思...</span>
             </div>
           </div>
         )}
@@ -954,7 +954,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
               ) : (
                 <>
                   <Mic size={18} className="text-alchemy-accent/60" />
-                  <span className="text-sm font-sans" style={{ fontWeight: 400 }}>
+                  <span className="text-[16px] font-sans" style={{ fontWeight: 400 }}>
                     {isTranscribing ? '正在转录...' : '按住说话'}
                   </span>
                 </>
@@ -974,7 +974,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                 }}
                 placeholder="输入你的感悟..."
                 rows={1}
-                className="flex-1 bg-transparent border-none focus:ring-0 focus:outline-none py-2 resize-none font-sans font-normal text-[18px] placeholder:opacity-30 max-h-32 overflow-y-auto"
+                className="flex-1 bg-transparent border-none focus:ring-0 focus:outline-none py-2 resize-none font-sans font-normal text-[16px] placeholder:opacity-30 max-h-32 overflow-y-auto"
               />
               <button
                 onClick={() => handleSend()}
@@ -1027,14 +1027,14 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                   className="mx-4 mb-4 flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-alchemy-paper/80 hover:bg-white/10 transition-colors"
                 >
                   <SquarePen size={16} />
-                  <span className="text-[18px]">新建对话</span>
+                  <span className="text-[16px]">新建对话</span>
                 </button>
 
                 {/* Session List */}
                 <div className="flex-1 overflow-y-auto no-scrollbar px-2 pb-6">
                   {groupSessions(allSessions).map((group) => (
                     <div key={group.label} className="mb-4">
-                      <div className="px-3 py-1.5 text-[11px] text-white/30 font-sans">{group.label}</div>
+                      <div className="px-3 py-1.5 text-[13px] text-white/30 font-sans">{group.label}</div>
                       {group.items.map((s: any) => {
                         const meta = MODE_META[s.mode] || MODE_META['Projection Work'];
                         const Icon = meta.icon;
@@ -1050,10 +1050,10 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                           >
                             <Icon size={14} className="shrink-0 mt-0.5" />
                             <div className="flex-1 min-w-0">
-                              <p className="text-[13px] truncate">
+                              <p className="text-[16px] truncate">
                                 {s.preview || meta.label}
                               </p>
-                              <p className="text-[11px] text-white/25 mt-0.5">{formatTime(s.updated_at)}</p>
+                              <p className="text-[13px] text-white/25 mt-0.5">{formatTime(s.updated_at)}</p>
                             </div>
                             <span
                               onClick={(e) => handleDeleteSession(e, s.id)}
@@ -1067,7 +1067,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                     </div>
                   ))}
                   {allSessions.length === 0 && (
-                    <p className="text-center text-[13px] text-white/20 italic mt-8">暂无历史对话</p>
+                    <p className="text-center text-[16px] text-white/20 italic mt-8">暂无历史对话</p>
                   )}
                 </div>
               </motion.div>

@@ -42,7 +42,7 @@ export default function Navigation({ activeTab, hasUpdates, setActiveTab }: Navi
   return (
     <nav
       className={`bg-alchemy-black/80 backdrop-blur-2xl border-t border-white/5 flex items-center justify-around px-6 z-50 transition-all duration-200 ${
-        keyboardUp ? 'h-0 !p-0 overflow-hidden opacity-0' : 'pt-2.5'
+        keyboardUp ? 'h-0 !p-0 overflow-hidden opacity-0' : 'pt-1.5'
       }`}
       style={{ paddingBottom: keyboardUp ? 0 : '0.25rem' }}
     >
@@ -80,7 +80,7 @@ function TabItem({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center gap-1 py-2 px-5 rounded-xl transition-all duration-300 min-w-[72px] active:scale-95 relative",
+        "flex flex-col items-center gap-0.5 py-1 px-5 rounded-xl transition-all duration-300 min-w-[72px] active:scale-95 relative",
         active
           ? "text-alchemy-accent"
           : hasUpdates
@@ -89,7 +89,7 @@ function TabItem({
       )}
     >
       <div className="relative">
-        <Icon size={24} />
+        <Icon size={22} />
         {hasUpdates && (
           <span className="absolute -top-1 -right-1.5 w-2 h-2 rounded-full bg-alchemy-accent animate-pulse shadow-[0_0_6px_rgba(232,213,163,0.8)]" />
         )}
