@@ -83,11 +83,9 @@
 }
 
 @media (min-width: 481px) {
-  #root .text-\[16px\] {
-    font-size: 13px;
-  }
+  #root .text-\[16px\],
   #root .prose {
-    font-size: 13px;
+    font-size: 13px !important;
   }
 }
 
