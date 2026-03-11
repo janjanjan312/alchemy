@@ -961,7 +961,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
               )}
             </button>
           ) : (
-            <div className="flex-1 flex items-center gap-1.5 bg-white/8 rounded-2xl px-3 h-[48px]">
+            <div className="flex-1 flex items-end gap-1.5 bg-white/8 rounded-2xl px-3 min-h-[48px]">
               <textarea
                 ref={textareaRef}
                 value={input}
