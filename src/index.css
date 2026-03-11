@@ -46,9 +46,8 @@
   }
 
   #root {
-    width: 100%;
-    min-height: 100dvh;
-    height: 100dvh;
+    position: fixed;
+    inset: 0;
     overflow: hidden;
   }
 
@@ -68,6 +67,8 @@
     }
 
     #root {
+      position: relative;
+      inset: auto;
       width: auto;
       height: 100%;
       max-height: 932px;
@@ -75,7 +76,6 @@
       aspect-ratio: 9 / 18;
       border-radius: 20px;
       overflow: hidden;
-      position: relative;
       box-shadow:
         0 0 0 2px #222,
         0 0 0 8px #1a1a1a,
