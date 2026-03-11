@@ -25,6 +25,7 @@
 
 @layer base {
   html {
+    height: 100%;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
     overscroll-behavior: none;
@@ -32,10 +33,12 @@
 
   body {
     @apply text-alchemy-paper font-sans selection:bg-alchemy-accent/30;
+    height: 100%;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
     overscroll-behavior: none;
+    overflow: hidden;
     background: #050505;
     margin: 0;
     padding: 0;
@@ -43,7 +46,7 @@
 
   #root {
     width: 100%;
-    min-height: 100dvh;
+    height: 100%;
   }
 
   input, textarea {
