@@ -41,7 +41,7 @@ export default function Navigation({ activeTab, hasUpdates, setActiveTab }: Navi
 
   return (
     <nav
-      className={`bg-alchemy-black/80 backdrop-blur-2xl border-t border-white/5 flex items-center justify-around px-6 z-50 transition-all duration-200 ${
+      className={`bg-alchemy-black/80 backdrop-blur-2xl border-t border-white/5 flex items-center gap-8 px-8 z-50 transition-all duration-200 ${
         keyboardUp ? 'h-0 !p-0 overflow-hidden opacity-0' : 'pt-2.5'
       }`}
       style={{ paddingBottom: keyboardUp ? 0 : 'max(0.5rem, env(safe-area-inset-bottom, 0.5rem))' }}
