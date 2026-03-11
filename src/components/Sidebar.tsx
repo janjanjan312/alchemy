@@ -1,10 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Flame, Moon } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+function useKeyboardVisible() {
+  const [up, setUp] = useState(false);
+
+  useEffect(() => {
+    const isTextInput = (el: EventTarget | null): boolean =>
+      el instanceof HTMLElement &&
+      (el.tagName === 'TEXTAREA' || el.isContentEditable ||
+       (el.tagName === 'INPUT' && !['checkbox','radio','button','submit','file','hidden','range'].includes((el as HTMLInputElement).type)));
+
+    const onFocusIn = (e: FocusEvent) => { if (isTextInput(e.target)) setUp(true); };
+    const onFocusOut = () => setTimeout(() => { if (!isTextInput(document.activeElement)) setUp(false); }, 80);
+
+    document.addEventListener('focusin', onFocusIn);
+    document.addEventListener('focusout', onFocusOut);
+    return () => {
+      document.removeEventListener('focusin', onFocusIn);
+      document.removeEventListener('focusout', onFocusOut);
+    };
+  }, []);
+
+  return up;
 }
 
 interface NavigationProps {
@@ -14,9 +37,15 @@ interface NavigationProps {
 }
 
 export default function Navigation({ activeTab, hasUpdates, setActiveTab }: NavigationProps) {
+  const keyboardUp = useKeyboardVisible();
+
   return (
-    <nav className="absolute bottom-0 left-0 right-0 bg-alchemy-black/80 backdrop-blur-2xl border-t border-white/5 flex items-center justify-around px-6 z-50"
-         style={{ paddingBottom: 'env(safe-area-inset-bottom, 8px)', height: 'calc(64px + env(safe-area-inset-bottom, 8px))' }}>
+    <nav
+      className={`bg-alchemy-black/80 backdrop-blur-2xl border-t border-white/5 flex items-center justify-around px-6 z-50 transition-all duration-200 ${
+        keyboardUp ? 'h-0 !p-0 overflow-hidden opacity-0' : 'pt-2'
+      }`}
+      style={{ paddingBottom: keyboardUp ? 0 : 'max(0.5rem, env(safe-area-inset-bottom, 0px))' }}
+    >
       <TabItem
         icon={Flame}
         label="炼金术室"

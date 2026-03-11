@@ -125,19 +125,10 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-alchemy-black overflow-hidden relative">
+    <div className="flex flex-col h-[100dvh] sm:h-full bg-alchemy-black overflow-hidden relative">
       <Stars />
       
-      <Navigation activeTab={activeTab} hasUpdates={pendingUpdates.insight || pendingUpdates.symbol || pendingUpdates.projection} setActiveTab={(tab) => {
-        setActiveTab(tab);
-        if (tab === 'mandala') {
-          setPendingUpdates({ insight: false, symbol: false, projection: false });
-          fetchProfile();
-          fetchUserData();
-        }
-      }} />
-      
-      <main className="flex-1 relative overflow-hidden" style={{ paddingBottom: 'calc(64px + env(safe-area-inset-bottom, 8px))' }}>
+      <main className="flex-1 relative overflow-hidden min-h-0">
         {/* Background Ambient Elements */}
         <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
           <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-alchemy-accent/10 rounded-full blur-[120px]" />
@@ -179,6 +170,15 @@ export default function App() {
           </motion.div>
         </AnimatePresence>
       </main>
+
+      <Navigation activeTab={activeTab} hasUpdates={pendingUpdates.insight || pendingUpdates.symbol || pendingUpdates.projection} setActiveTab={(tab) => {
+        setActiveTab(tab);
+        if (tab === 'mandala') {
+          setPendingUpdates({ insight: false, symbol: false, projection: false });
+          fetchProfile();
+          fetchUserData();
+        }
+      }} />
     </div>
   );
 }
