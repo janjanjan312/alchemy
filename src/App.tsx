@@ -125,7 +125,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-[100dvh] sm:h-full bg-alchemy-black overflow-hidden relative">
+    <div className="flex flex-col h-full bg-alchemy-black overflow-hidden relative">
       <Stars />
       
       <main className="flex-1 relative overflow-hidden min-h-0">
