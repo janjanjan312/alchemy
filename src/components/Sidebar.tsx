@@ -89,7 +89,7 @@ function TabItem({
       )}
     >
       <div className="relative">
-        <Icon size={22} />
+        <Icon size={24} />
         {hasUpdates && (
           <span className="absolute -top-1 -right-1.5 w-2 h-2 rounded-full bg-alchemy-accent animate-pulse shadow-[0_0_6px_rgba(232,213,163,0.8)]" />
         )}
