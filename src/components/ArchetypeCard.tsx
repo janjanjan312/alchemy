@@ -32,7 +32,7 @@ export default function ArchetypeCard({ archetype, onTalk, isActive = true, onMa
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{ duration: 0.8, type: "spring", stiffness: 260, damping: 20 }}
         className="relative w-full h-full"
-        style={{ transformStyle: 'preserve-3d' }}
+        style={{ transformStyle: 'preserve-3d', WebkitTransformStyle: 'preserve-3d' }}
       >
         {/* Front Side */}
         <div
@@ -44,7 +44,7 @@ export default function ArchetypeCard({ archetype, onTalk, isActive = true, onMa
                 ? "border-alchemy-accent/30 bg-alchemy-black shadow-[0_0_16px_rgba(232,213,163,0.1)]"
                 : "border-alchemy-gold/20 bg-alchemy-black"
           )}
-          style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', pointerEvents: isFlipped ? 'none' : 'auto' }}
+          style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'translateZ(0)', pointerEvents: isFlipped ? 'none' : 'auto' }}
           onClick={() => {
             if (isActive) {
               setIsFlipped(true);
@@ -99,7 +99,7 @@ export default function ArchetypeCard({ archetype, onTalk, isActive = true, onMa
         {/* Back Side */}
         <div
           className="absolute inset-0 rounded-2xl border border-alchemy-accent/20 bg-[#0a0a0a] p-6 flex flex-col overflow-hidden"
-          style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'rotateY(180deg)', pointerEvents: isFlipped ? 'auto' : 'none' }}
+          style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'rotateY(180deg) translateZ(0)', pointerEvents: isFlipped ? 'auto' : 'none' }}
           onClick={() => setIsFlipped(false)}
         >
           {/* Header */}
