@@ -292,7 +292,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
 
     (async () => {
       setSessionLoading(true);
-      setMessages([]);
+      setMessages([makeGreeting(mode)]);
 
       try {
         const [sessionRes, summaryRes, profileRes] = await Promise.all([
