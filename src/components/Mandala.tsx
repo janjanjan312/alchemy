@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Archetype, SymbolEntry, ProjectionEntry } from '../types';
 import ArchetypeCard from './ArchetypeCard';
@@ -20,9 +20,11 @@ interface MandalaProps {
   newSymbols?: boolean;
   newProjections?: boolean;
   onPanelSeen?: (panel: 'symbols' | 'projections') => void;
+  focusArchetypeId?: string | null;
+  onFocusHandled?: () => void;
 }
 
-export default function Mandala({ archetypes, onTalk, symbols = [], projections = [], onProjectionUpdate, onMarkSeen, newSymbols, newProjections, onPanelSeen }: MandalaProps) {
+export default function Mandala({ archetypes, onTalk, symbols = [], projections = [], onProjectionUpdate, onMarkSeen, newSymbols, newProjections, onPanelSeen, focusArchetypeId, onFocusHandled }: MandalaProps) {
   const sorted = [...archetypes].sort((a, b) => {
     const aUnlocked = a.unlocked ? 1 : 0;
     const bUnlocked = b.unlocked ? 1 : 0;
@@ -34,6 +36,13 @@ export default function Mandala({ archetypes, onTalk, symbols = [], projections 
 
   const [activeId, setActiveId] = useState<string | null>(sorted[0]?.id || null);
   const [showPanel, setShowPanel] = useState<'none' | 'symbols' | 'projections'>('none');
+
+  useEffect(() => {
+    if (focusArchetypeId) {
+      setActiveId(focusArchetypeId);
+      onFocusHandled?.();
+    }
+  }, [focusArchetypeId]);
   
   const unlockedCount = sorted.filter(a => a.unlocked).length;
   
@@ -65,8 +74,7 @@ export default function Mandala({ archetypes, onTalk, symbols = [], projections 
                   "shrink-0 w-10 h-14 rounded-md border transition-all duration-300 relative group cursor-pointer",
                   activeId === a.id 
                     ? "border-alchemy-gold scale-110 z-10 shadow-[0_0_15px_rgba(232,213,163,0.4)]" 
-                    : "border-white/10 opacity-40 hover:opacity-100",
-                  isLocked && "grayscale brightness-50"
+                    : isLocked ? "border-white/10 opacity-30 grayscale" : "border-white/10"
                 )}
                 title={a.name}
                 onClick={() => setActiveId(a.id)}

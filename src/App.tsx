@@ -20,6 +20,7 @@ export default function App() {
   const [openArchetypes, setOpenArchetypes] = useState<string[]>([]);
   const [activeArchetype, setActiveArchetype] = useState<string | null>(null);
   const [pendingUpdates, setPendingUpdates] = useState<{ insight: boolean; symbol: boolean; projection: boolean }>({ insight: false, symbol: false, projection: false });
+  const [focusArchetypeId, setFocusArchetypeId] = useState<string | null>(null);
 
   const handleContentUpdate = useCallback((type: 'insight' | 'symbol' | 'projection') => {
     setPendingUpdates(prev => ({ ...prev, [type]: true }));
@@ -84,6 +85,7 @@ export default function App() {
         body: JSON.stringify({ userId, archetypeId, content, guidance }),
       });
       await fetchProfile();
+      setFocusArchetypeId(archetypeId);
     } catch (error) {
       console.error("Failed to archive insight", error);
     }
@@ -164,6 +166,8 @@ export default function App() {
             newSymbols={pendingUpdates.symbol}
             newProjections={pendingUpdates.projection}
             onPanelSeen={(panel) => setPendingUpdates(prev => ({ ...prev, [panel === 'symbols' ? 'symbol' : 'projection']: false }))}
+            focusArchetypeId={focusArchetypeId}
+            onFocusHandled={() => setFocusArchetypeId(null)}
           />
         </div>
       </main>
