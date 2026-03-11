@@ -708,7 +708,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
   return (
     <div className="flex flex-col h-full max-w-4xl mx-auto px-3 lg:px-4">
       {/* Mode Switcher */}
-      <div ref={modeBarRef} className="flex items-center justify-center gap-2 lg:gap-4 py-4 lg:py-6 overflow-x-auto no-scrollbar">
+      <div ref={modeBarRef} className="flex items-center justify-between gap-2 lg:gap-4 py-4 lg:py-6 overflow-x-auto no-scrollbar">
         {!isArchetypeActive && (
           <button
             onClick={openSidebar}
