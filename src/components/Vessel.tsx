@@ -706,9 +706,9 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
   }, [savedInsights, onInsightArchive, onContentUpdate]);
 
   return (
-    <div className="flex flex-col h-full max-w-4xl mx-auto px-3 lg:px-4">
+    <div className="flex flex-col h-full max-w-4xl mx-auto px-4">
       {/* Mode Switcher */}
-      <div ref={modeBarRef} className="flex items-center justify-between gap-2 lg:gap-4 py-4 lg:py-6 overflow-x-auto no-scrollbar">
+      <div ref={modeBarRef} className="flex items-center justify-between gap-3 py-4 overflow-x-auto no-scrollbar">
         {!isArchetypeActive && (
           <button
             onClick={openSidebar}
@@ -767,7 +767,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
       {/* Chat Area */}
       <div 
         ref={scrollRef}
-        className="flex-1 overflow-y-auto space-y-6 lg:space-y-8 py-4 lg:py-8 no-scrollbar"
+        className="flex-1 overflow-y-auto space-y-6 py-4 no-scrollbar"
       >
         <AnimatePresence initial={false}>
           {messages.map((msg, i) => (
@@ -781,7 +781,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
               )}
             >
               <div className={cn(
-                "max-w-[90%] lg:max-w-[85%] rounded-2xl px-4 lg:px-6 py-3 lg:py-4",
+                "max-w-[85%] rounded-2xl px-5 py-3.5",
                 msg.role === 'user' 
                   ? "bg-alchemy-accent/10 border border-alchemy-accent/20 text-alchemy-paper" 
                   : "bg-white/5 border border-white/10 text-alchemy-paper/90"
@@ -803,7 +803,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                 <motion.div
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  className="mt-4 p-4 rounded-xl border border-alchemy-accent/40 bg-alchemy-accent/5 max-w-[280px] lg:max-w-xs"
+                  className="mt-4 p-4 rounded-xl border border-alchemy-accent/40 bg-alchemy-accent/5 max-w-xs"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <Sparkles size={16} className="text-alchemy-accent" />
@@ -829,7 +829,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                 <motion.div
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  className="mt-4 p-4 rounded-xl border border-alchemy-accent/25 bg-alchemy-accent/5 max-w-[280px] lg:max-w-xs"
+                  className="mt-4 p-4 rounded-xl border border-alchemy-accent/25 bg-alchemy-accent/5 max-w-xs"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <BookOpen size={16} className="text-alchemy-accent/85" />
@@ -858,7 +858,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                 <motion.div
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  className="mt-4 p-4 rounded-xl border border-alchemy-accent/15 bg-[rgba(232,213,163,0.02)] backdrop-blur-sm max-w-[280px] lg:max-w-xs"
+                  className="mt-4 p-4 rounded-xl border border-alchemy-accent/15 bg-[rgba(232,213,163,0.02)] backdrop-blur-sm max-w-xs"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <ScanEye size={16} className="text-alchemy-accent/70" />
@@ -911,7 +911,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
 
         {isThinking && (
           <div className="flex justify-start">
-            <div className="bg-white/5 border border-white/10 rounded-2xl px-4 lg:px-6 py-3 lg:py-4 flex items-center gap-3">
+            <div className="bg-white/5 border border-white/10 rounded-2xl px-5 py-3.5 flex items-center gap-3">
               <Loader2 className="animate-spin text-alchemy-accent" size={16} />
               <span className="text-[14px] font-normal italic opacity-60">炼金术师正在沉思...</span>
             </div>
@@ -920,7 +920,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
       </div>
 
       {/* Input Area */}
-      <div className="pb-1 lg:pb-2 pt-2">
+      <div className="pb-1 pt-2">
         <div className="flex items-center gap-2.5 w-full">
           <button
             onClick={() => setInputMethod(inputMethod === 'voice' ? 'text' : 'voice')}
