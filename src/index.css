@@ -41,7 +41,7 @@
     height: 100%;
     overflow: hidden;
     background: #050505;
-    padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) 0 env(safe-area-inset-left, 0);
+    padding: 0;
   }
 
   #root {

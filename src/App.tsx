@@ -125,7 +125,14 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-alchemy-black overflow-hidden relative">
+    <div
+      className="flex flex-col h-full bg-alchemy-black overflow-hidden relative"
+      style={{
+        paddingTop: 'env(safe-area-inset-top, 0px)',
+        paddingLeft: 'env(safe-area-inset-left, 0px)',
+        paddingRight: 'env(safe-area-inset-right, 0px)',
+      }}
+    >
       <Stars />
       
       <main className="flex-1 relative overflow-hidden min-h-0">
