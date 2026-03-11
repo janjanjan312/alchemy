@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useLayoutEffect } from 'react';
 import Navigation from './components/Sidebar';
 import Vessel from './components/Vessel';
 import Mandala from './components/Mandala';
@@ -12,7 +12,21 @@ import { Archetype, SymbolEntry, ProjectionEntry } from './types';
 import { INITIAL_ARCHETYPES } from './constants';
 import { motion, AnimatePresence } from 'motion/react';
 
+function useWindowHeight() {
+  const [h, setH] = useState(() =>
+    typeof window !== 'undefined' ? window.innerHeight : 0
+  );
+  useLayoutEffect(() => {
+    const update = () => setH(window.innerHeight);
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+  return h;
+}
+
 export default function App() {
+  const windowHeight = useWindowHeight();
   const [activeTab, setActiveTab] = useState<'vessel' | 'mandala'>('vessel');
   const [archetypes, setArchetypes] = useState<Archetype[]>(INITIAL_ARCHETYPES);
   const [symbols, setSymbols] = useState<SymbolEntry[]>([]);
@@ -126,8 +140,9 @@ export default function App() {
 
   return (
     <div
-      className="flex flex-col h-full bg-alchemy-black overflow-hidden relative"
+      className="flex flex-col bg-alchemy-black overflow-hidden relative"
       style={{
+        height: windowHeight ? `${windowHeight}px` : '100dvh',
         paddingTop: 'env(safe-area-inset-top, 0px)',
         paddingLeft: 'env(safe-area-inset-left, 0px)',
         paddingRight: 'env(safe-area-inset-right, 0px)',
