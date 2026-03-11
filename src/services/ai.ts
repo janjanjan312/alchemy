@@ -101,7 +101,10 @@ const PROJECTION_INSTRUCTION = `
 [PROJECTION: {"target": "投射对象", "trait": "投射特质", "archetype": "对应原型id"}]
 archetype 可选值：shadow, anima, animus, persona, self
 注意：只在用户有了初步的自我觉察时才生成，不要过早标记。每次最多生成一个。
-重要：同一个投射（相同 target + trait）在整段对话中只生成一次。如果之前的回复已经生成过，后续绝不再生成。`;
+去重规则（严格遵守）：
+- 生成前先检查下方"已生成的投射"列表中是否有相同 target 的投射
+- 如果同一个 target 已有投射，判断新投射是否与已有的在语义上属于同一种心理动力。如果是同一种的不同说法，绝不生成。例如："老板-评判倾向"和"老板-严苛评判"本质相同，不要重复
+- 只有当同一 target 的新投射涉及真正不同的心理维度时才可以生成。例如："老板-评判倾向"和"老板-控制欲"是不同的阴影面向，可以分别生成
 
 const SAFETY_PROMPT = `【最高优先级安全指令】
 检测到用户可能正在经历心理危机。你必须：
@@ -202,6 +205,19 @@ export async function chat({ messages, mode, userInput, userSymbols, userProject
     systemPrompt += SYMBOL_INSTRUCTION;
   } else if (mode === 'Projection Work') {
     systemPrompt += PROJECTION_INSTRUCTION;
+    const projByTarget = new Map<string, string[]>();
+    for (const m of messages) {
+      if (!m.projection) continue;
+      const { target, trait, archetype } = m.projection;
+      if (!projByTarget.has(target)) projByTarget.set(target, []);
+      projByTarget.get(target)!.push(`"${trait}"（${archetype}）`);
+    }
+    if (projByTarget.size > 0) {
+      const lines = [...projByTarget.entries()].map(
+        ([target, traits]) => `- ${target}：${traits.join('、')}`
+      );
+      systemPrompt += `\n\n【本次对话已生成的投射，同 target 下语义相同的不要重复】：\n${lines.join('\n')}`;
+    }
   }
 
   systemPrompt += buildContextBlock(userSymbols, userProjections, historySummaries, userProfile, knowledgeChunks);
