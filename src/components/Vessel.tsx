@@ -191,6 +191,9 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
   const skipNextModeLoad = useRef(false);
   const normalMessages = useRef<{ mode: Mode; messages: Message[]; sessionId: string | null } | null>(null);
   const modeCache = useRef<Map<Mode, { messages: Message[]; sessionId: string | null }>>(new Map());
+  const currentMessagesMode = useRef<Mode>((() => {
+    return (localStorage.getItem('alchemy_last_mode') as Mode) || 'Free Talk';
+  })());
   const messagesRef = useRef(messages);
   messagesRef.current = messages;
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -200,11 +203,6 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
 
   const isArchetypeActive = !!activeArchetype && openArchetypes.includes(activeArchetype);
 
-  useEffect(() => {
-    if (!isArchetypeActive && messages.length > 0) {
-      modeCache.current.set(mode, { messages, sessionId });
-    }
-  }, [messages, mode, sessionId, isArchetypeActive]);
 
   useEffect(() => {
     (async () => {
@@ -293,9 +291,20 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
     if (isArchetypeActive) return;
     if (skipNextModeLoad.current) {
       skipNextModeLoad.current = false;
+      currentMessagesMode.current = mode;
       return;
     }
 
+    // Save previous mode's messages to cache before switching
+    if (currentMessagesMode.current !== mode && messagesRef.current.length > 0) {
+      modeCache.current.set(currentMessagesMode.current, {
+        messages: messagesRef.current,
+        sessionId,
+      });
+    }
+    currentMessagesMode.current = mode;
+
+    // Restore from cache if available
     const cached = modeCache.current.get(mode);
     if (cached) {
       setMessages(cached.messages);
@@ -334,13 +343,16 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
             const msgs = dbMessages.map(dbMsgToMessage);
             setSessionId(sid);
             setMessages(msgs);
+            modeCache.current.set(mode, { messages: msgs, sessionId: sid });
             setSessionLoading(false);
             return;
           }
         }
 
+        const greetingMsgs = [makeGreeting(mode)];
         setSessionId(null);
-        setMessages([makeGreeting(mode)]);
+        setMessages(greetingMsgs);
+        modeCache.current.set(mode, { messages: greetingMsgs, sessionId: null });
       } catch (e) {
         console.error('Session load failed:', e);
         if (!cancelled) {
@@ -354,6 +366,13 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
 
     return () => { cancelled = true; };
   }, [mode, userId]);
+
+  // Sync cache when messages change during normal use (send/receive)
+  useEffect(() => {
+    if (!isArchetypeActive && messages.length > 0 && currentMessagesMode.current === mode) {
+      modeCache.current.set(mode, { messages, sessionId });
+    }
+  }, [messages, sessionId]);
 
   const prevMsgLen = useRef(0);
 

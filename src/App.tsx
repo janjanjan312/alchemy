@@ -10,7 +10,7 @@ import Mandala from './components/Mandala';
 import Stars from './components/Stars';
 import { Archetype, SymbolEntry, ProjectionEntry } from './types';
 import { INITIAL_ARCHETYPES } from './constants';
-import { motion, AnimatePresence } from 'motion/react';
+
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'vessel' | 'mandala'>('vessel');
@@ -142,40 +142,30 @@ export default function App() {
           <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-alchemy-blue/30 rounded-full blur-[120px]" />
         </div>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="h-full overflow-y-auto relative z-10"
-          >
-            {activeTab === 'vessel' ? (
-              <Vessel
-                userId={userId}
-                onInsightArchive={handleInsightArchive}
-                onContentUpdate={handleContentUpdate}
-                openArchetypes={openArchetypes}
-                activeArchetype={activeArchetype}
-                onSelectArchetype={setActiveArchetype}
-                onCloseArchetype={handleCloseArchetype}
-              />
-            ) : (
-              <Mandala
-                archetypes={archetypes}
-                onTalk={handleTalkToArchetype}
-                symbols={symbols}
-                projections={projections}
-                onProjectionUpdate={handleProjectionUpdate}
-                onMarkSeen={handleMarkSeen}
-                newSymbols={pendingUpdates.symbol}
-                newProjections={pendingUpdates.projection}
-                onPanelSeen={(panel) => setPendingUpdates(prev => ({ ...prev, [panel === 'symbols' ? 'symbol' : 'projection']: false }))}
-              />
-            )}
-          </motion.div>
-        </AnimatePresence>
+        <div className={activeTab === 'vessel' ? 'h-full overflow-y-auto relative z-10' : 'hidden'}>
+          <Vessel
+            userId={userId}
+            onInsightArchive={handleInsightArchive}
+            onContentUpdate={handleContentUpdate}
+            openArchetypes={openArchetypes}
+            activeArchetype={activeArchetype}
+            onSelectArchetype={setActiveArchetype}
+            onCloseArchetype={handleCloseArchetype}
+          />
+        </div>
+        <div className={activeTab === 'mandala' ? 'h-full overflow-y-auto relative z-10' : 'hidden'}>
+          <Mandala
+            archetypes={archetypes}
+            onTalk={handleTalkToArchetype}
+            symbols={symbols}
+            projections={projections}
+            onProjectionUpdate={handleProjectionUpdate}
+            onMarkSeen={handleMarkSeen}
+            newSymbols={pendingUpdates.symbol}
+            newProjections={pendingUpdates.projection}
+            onPanelSeen={(panel) => setPendingUpdates(prev => ({ ...prev, [panel === 'symbols' ? 'symbol' : 'projection']: false }))}
+          />
+        </div>
       </main>
 
       <Navigation activeTab={activeTab} hasUpdates={pendingUpdates.insight || pendingUpdates.symbol || pendingUpdates.projection} setActiveTab={(tab) => {
