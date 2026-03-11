@@ -793,7 +793,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                     <span className="w-2 h-2 rounded-full bg-alchemy-accent/60 animate-bounce" style={{ animationDelay: '300ms' }} />
                   </div>
                 ) : (
-                <div className="prose prose-sm prose-invert max-w-none font-normal text-[14px] leading-relaxed opacity-90 [&>p+p]:mt-4">
+                <div className="prose prose-base prose-invert max-w-none font-normal text-[18px] leading-relaxed opacity-90 [&>p+p]:mt-4">
                   <ReactMarkdown>{msg.content}</ReactMarkdown>
                 </div>
                 )}
@@ -809,7 +809,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                     <Sparkles size={16} className="text-alchemy-accent" />
                     <span className="text-xs uppercase tracking-widest font-sans font-bold text-alchemy-accent">新洞察</span>
                   </div>
-                  <p className="text-[14px] font-normal italic mb-3 opacity-80">"{msg.insight.content}"</p>
+                  <p className="text-[18px] font-normal italic mb-3 opacity-80">"{msg.insight.content}"</p>
                   <button 
                     onClick={() => handleSaveInsight(msg.insight!.type, msg.insight!.content)}
                     disabled={savedInsights.has(`${msg.insight.type}|${msg.insight.content}`)}
@@ -835,7 +835,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                     <BookOpen size={16} className="text-alchemy-accent/85" />
                     <span className="text-xs uppercase tracking-widest font-sans font-bold text-alchemy-accent/85">新象征</span>
                   </div>
-                  <p className="text-[14px] font-normal mb-1 text-alchemy-paper">
+                  <p className="text-[18px] font-normal mb-1 text-alchemy-paper">
                     「{msg.symbol.term}」
                   </p>
                   <p className="text-[13px] font-normal italic mb-3 opacity-60">{msg.symbol.meaning}</p>
@@ -913,7 +913,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
           <div className="flex justify-start">
             <div className="bg-white/5 border border-white/10 rounded-2xl px-5 py-3.5 flex items-center gap-3">
               <Loader2 className="animate-spin text-alchemy-accent" size={16} />
-              <span className="text-[14px] font-normal italic opacity-60">炼金术师正在沉思...</span>
+              <span className="text-[18px] font-normal italic opacity-60">炼金术师正在沉思...</span>
             </div>
           </div>
         )}
@@ -974,7 +974,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                 }}
                 placeholder="输入你的感悟..."
                 rows={1}
-                className="flex-1 bg-transparent border-none focus:ring-0 focus:outline-none py-2 resize-none font-sans font-normal text-[14px] placeholder:opacity-30 max-h-32 overflow-y-auto"
+                className="flex-1 bg-transparent border-none focus:ring-0 focus:outline-none py-2 resize-none font-sans font-normal text-[18px] placeholder:opacity-30 max-h-32 overflow-y-auto"
               />
               <button
                 onClick={() => handleSend()}
@@ -1027,7 +1027,7 @@ export default function Vessel({ userId, onInsightArchive, onContentUpdate, open
                   className="mx-4 mb-4 flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-alchemy-paper/80 hover:bg-white/10 transition-colors"
                 >
                   <SquarePen size={16} />
-                  <span className="text-[14px]">新建对话</span>
+                  <span className="text-[18px]">新建对话</span>
                 </button>
 
                 {/* Session List */}
